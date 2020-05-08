@@ -1,0 +1,51 @@
+//
+//  HNCFModifyPswViewController.m
+//  HNCF
+//
+//  Created by houshangyong on 15/12/7.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFModifyPswViewController.h"
+#import "HNCFCommmon.h"
+
+@interface HNCFModifyPswViewController ()<HNCFNaViewDelegate>
+@property (nonatomic , strong) HNCFNaView *naView;
+
+@end
+
+@implementation HNCFModifyPswViewController
+- (HNCFNaView *)naView
+{
+    if (!_naView) {
+        _naView = [[HNCFNaView alloc]initWithFrame:CGRectMake(0, 20, HNCFWidth, 44)];
+        _naView.delegate = self;
+    }
+    return _naView;
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+    [self.naView setHomeBannerData:@"修改密码" locationImage:YES rightButton:YES];
+
+    self.navigationItem.leftBarButtonItem =[[UIBarButtonItem alloc]initWithCustomView:self.naView];
+
+}
+- (void)didSelectLeft;
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void)didSelectRight;
+{
+    
+}
+- (IBAction)modifySelect:(id)sender;
+{
+    
+}
+@end

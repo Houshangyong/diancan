@@ -1,0 +1,187 @@
+//
+//  HNCFMineViewController.m
+//  HNCF
+//
+//  Created by Apple on 15/11/17.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFMineViewController.h"
+#import "HNCFCommmon.h"
+
+@interface HNCFMineViewController ()<UITableViewDelegate,
+UITableViewDataSource>
+@property (nonatomic, strong) NSArray *dataSource;
+
+@end
+
+@implementation HNCFMineViewController
+- (NSArray *)dataSource {
+    if (!_dataSource) {
+        _dataSource = @[@{@"img":@"T2",
+                                @"title":@"我的收货地址",
+                                @"sub":@""},
+                              @{@"img":@"T2",
+                                @"title":@"我的收藏",
+                                @"sub":@""},
+                              @{@"img":@"T2",
+                                @"title":@"我的评论",
+                                @"sub":@""},
+                              @{@"img":@"T2",
+                                @"title":@"联系客服",
+                                @"sub":@"4000703199"},
+                              @{@"img":@"T2",
+                                @"title":@"邀请小伙伴吃饭",
+                                @"sub":@""},
+                              @{@"img":@"T2",
+                                @"title":@"意见反馈",
+                                @"sub":@""}
+                              ];
+    }
+    return _dataSource;
+}
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.tabBarController.tabBar.hidden = NO;
+    self.navigationController.navigationBar.hidden = NO;
+    if(![MTLinkUrl connectedToNetwork])
+    {
+                UIAlertView *alert=[[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"网络连接失败,请查看网络是否连接正常！" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alert show];
+    }else{
+        if ([HNCFUserDefaultsUtil isLogin]) {
+            NSDictionary *userInfo = [HNCFUserDefaultsUtil globalObjectForKey:kMTCurrentUserInfo];
+
+            [HNCFRequestManager fetchUserInfo:@{@"uid":[userInfo objectForKey:@"uid"]} success:^(id result) {
+                NSInteger code = [[result objectForKey:@"code"]integerValue];
+                if (code ==0) {
+                    self.nameLabel.text =  [NSString stringWithFormat:@"%@",[result objectForKey:@"username"]];
+                    [self.photoButton sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@",[result objectForKey:@"img"]]] forState:UIControlStateNormal placeholderImage:nil];
+
+                }
+//                NSLog(@"result:%@",result);
+                
+            } failure:^(NSError *error) {
+                
+            }];
+
+        }else{
+         self.nameLabel.text =  @"会员账号/昵称";
+        [self.photoButton setBackgroundImage:[UIImage imageNamed:@"tou"] forState:UIControlStateNormal];
+        }
+ 
+    }
+
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    self.scrollView.contentSize = CGSizeMake(self.view.width,self.scrollView.maxY);
+    self.title = @"个人中心";
+
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+#pragma mark - UITableViewDelegate
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return  44;
+}
+
+
+#pragma mark - UITableViewDataSource
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    
+    static NSString *CellIdentifier = @"Cel1l111";
+    MJMyTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"MJMyTableViewCell" owner:self options:nil];
+        cell = [nib objectAtIndex:0];
+        cell.accessoryType = UITableViewCellAccessoryNone;
+        
+    }
+    id model = [self.dataSource  objectAtIndex:indexPath.row];
+    
+    cell.imageVIew.image  = [UIImage imageNamed:[model objectForKey:@"img"]];
+    cell.nameLabel.text  = [model objectForKey:@"title"];
+    cell.subNameLabel.text  = [model objectForKey:@"sub"];
+    
+    return cell;
+    //    }
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [self.dataSource count];
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    if ([HNCFUserDefaultsUtil isLogin]) {
+        switch (indexPath.row) {
+            case 0:
+            {
+                HNCFMyAddressViewController *myaddressViewController = [[HNCFMyAddressViewController alloc]init];
+                [self.navigationController pushViewController:myaddressViewController animated:YES];
+            }
+                break;
+            case 1:
+            {
+                HNCFMyCollectViewController *mycollectViewController = [[HNCFMyCollectViewController alloc]init];
+                [self.navigationController pushViewController:mycollectViewController animated:YES];
+            }
+                break;
+            case 2:
+            {
+                HNCFMyPinLunViewController *myPinLunViewController = [[HNCFMyPinLunViewController alloc]init];
+                [self.navigationController pushViewController:myPinLunViewController animated:YES];
+            }
+                break;
+            case 3:
+            {
+                [UIAlertView bk_showAlertViewWithTitle:@"" message:@"4000703199" cancelButtonTitle:@"取消" otherButtonTitles:@[@"呼叫"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                    if (buttonIndex ==0) {
+                        
+                    }else{
+                        [[UIApplication sharedApplication]openURL:[NSURL URLWithString:@"tel://4000703199"]];
+                    }
+                }];
+            }
+                break;
+            case 4:
+            {
+                
+            }
+                break;
+            case 5:
+            {
+                HNCFFeedViewController *feedViewController = [[HNCFFeedViewController alloc]init];
+                [self.navigationController pushViewController:feedViewController animated:YES];
+            }
+                break;
+                
+            default:
+                break;
+        }
+
+    }else{
+        HNCFLoginViewController *login = [[HNCFLoginViewController alloc]init];
+        [self.navigationController pushViewController:login animated:YES];
+    }
+   }
+
+- (IBAction)photoButton:(id)sender;
+{
+    HNCFLoginViewController *loginViewController = [[HNCFLoginViewController alloc]init];
+    [self.navigationController pushViewController:loginViewController animated:YES];
+}
+- (IBAction)setButton:(id)sender;
+{
+    HNCFSetViewController *setViewController = [[HNCFSetViewController alloc]init];
+    [self.navigationController pushViewController:setViewController animated:YES];
+}
+@end

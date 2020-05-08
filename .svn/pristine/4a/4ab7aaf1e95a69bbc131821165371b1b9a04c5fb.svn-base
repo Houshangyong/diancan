@@ -1,0 +1,44 @@
+//
+//  HNCFRequestManager+home.m
+//  HNCF
+//
+//  Created by houshangyong on 15/11/21.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFRequestManager+home.h"
+#import "HNCFCommmon.h"
+#define HOME_GETADS                             @"ad/getAds.do"
+#define HOME_GETHOMESHOPL                       @"shop/getHomeShopL.do"
+
+@implementation HNCFRequestManager (home)
++ (NSURLRequest *)fetchhomeAds:(NSDictionary *)parameters
+                     success:(void (^)(id result))success
+                     failure:(void (^)(NSError *error))failure
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:HOME_GETADS]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+    
+}
++ (NSURLRequest *)fetchhomeshop:(NSDictionary *)parameters
+                       success:(void (^)(id result))success
+                       failure:(void (^)(NSError *error))failure;{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:HOME_GETHOMESHOPL]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+
+}
+@end

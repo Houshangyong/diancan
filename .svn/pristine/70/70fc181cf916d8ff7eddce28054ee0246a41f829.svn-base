@@ -1,0 +1,17 @@
+//
+//  HNCFModifyPswViewController.h
+//  HNCF
+//
+//  Created by houshangyong on 15/12/7.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface HNCFModifyPswViewController : UIViewController
+@property (nonatomic , strong) IBOutlet UIView *oldModify;
+@property (nonatomic , strong) IBOutlet UIView *updateModify;
+@property (nonatomic , strong) IBOutlet UIView *updateModify1;
+@property (nonatomic , strong) IBOutlet UIButton *modifyButton;
+- (IBAction)modifySelect:(id)sender;
+@end

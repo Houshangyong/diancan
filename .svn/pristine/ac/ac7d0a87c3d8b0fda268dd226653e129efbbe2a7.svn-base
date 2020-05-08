@@ -1,0 +1,19 @@
+//
+//  HNCFPinLunViewController.h
+//  HNCF
+//
+//  Created by houshangyong on 15/11/23.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface HNCFPinLunViewController : UIViewController
+@property (nonatomic , strong) IBOutlet UIView *headView;
+@property (nonatomic , strong) IBOutlet UIImageView *headImageView;
+@property (nonatomic , strong) IBOutlet UILabel *headNameLabel;
+@property (nonatomic , strong) IBOutlet UILabel *headPriceLabel;
+@property (nonatomic , strong) IBOutlet UIButton *pinButton;
+- (IBAction)pinButton:(id)sender;
+
+@end

@@ -1,0 +1,64 @@
+//
+//  HNCFRequestManager+user.h
+//  HNCF
+//
+//  Created by houshangyong on 15/11/21.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFRequestManager.h"
+
+@interface HNCFRequestManager (user)
++ (NSURLRequest *)fetchLogin:(NSDictionary *)parameters
+                     success:(void (^)(id result))success
+                     failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchRegist:(NSDictionary *)parameters
+                     success:(void (^)(id result))success
+                     failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchUpdatePsw:(NSDictionary *)parameters
+                      success:(void (^)(id result))success
+                      failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchForgetPsw:(NSDictionary *)parameters
+                         success:(void (^)(id result))success
+                         failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchGetResigetCode:(NSDictionary *)parameters
+                              success:(void (^)(id result))success
+                              failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchUserInfo:(NSDictionary *)parameters
+                        success:(void (^)(id result))success
+                        failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchForgetCode:(NSDictionary *)parameters
+                          success:(void (^)(id result))success
+                          failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchGetCollect:(NSDictionary *)parameters
+                          success:(void (^)(id result))success
+                          failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchAddCollect:(NSDictionary *)parameters
+                          success:(void (^)(id result))success
+                          failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchCancelCollect:(NSDictionary *)parameters
+                             success:(void (^)(id result))success
+                             failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchAddress:(NSDictionary *)parameters
+                       success:(void (^)(id result))success
+                       failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchaddressUpdate:(NSDictionary *)parameters
+                             success:(void (^)(id result))success
+                             failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchaddressList:(NSDictionary *)parameters
+                           success:(void (^)(id result))success
+                           failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchCityList:(NSDictionary *)parameters
+                        success:(void (^)(id result))success
+                        failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchaddressDefault:(NSDictionary *)parameters
+                              success:(void (^)(id result))success
+                              failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchCommentList:(NSDictionary *)parameters
+                              success:(void (^)(id result))success
+                              failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchCommentAdd:(NSDictionary *)parameters
+                           success:(void (^)(id result))success
+                           failure:(void (^)(NSError *error))failure;
+
+@end

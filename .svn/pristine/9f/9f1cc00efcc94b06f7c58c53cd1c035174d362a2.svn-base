@@ -1,0 +1,285 @@
+//
+//  HNCFRequestManager+user.m
+//  HNCF
+//
+//  Created by houshangyong on 15/11/21.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFRequestManager+user.h"
+#import "HNCFCommmon.h"
+#define USER_LOGIN                       @"member/login.do"
+#define USER_REGIST                      @"member/regist.do"
+#define USER_UPDATEPSW                   @"member/updatePsw.do"
+#define USER_FOEGETPSW                   @"member/forgetPsw.do"
+#define USER_INFO                        @"member/getUserInfoByUid.do"
+#define USER_GET_CODE                    @"member/getRegistCode.do"
+#define USER_FORGET_CODE                 @"member/getForgetPwdCode.do"
+#define USER_COLLECT                     @"member/getCollect.do"
+#define USER_ADD_COLLECT                 @"member/addCollect.do"
+#define USER_CANCEL_COLLECT              @"member/cancelCollect.do"
+#define USER_ADD                         @"addr/add.do"
+#define USER_UPDATE                      @"addr/update.do"
+#define USER_LIST                        @"addr/list.do"
+#define USER_CITY_LIST                   @"addr/cityList.do"
+#define USER_SETDEFAULT                  @"addr/setDefault.do"
+#define USER_COMENTLIST                  @"comment/list.do"
+#define USER_COMENTADD                   @"comment/add.do"
+
+@implementation HNCFRequestManager (user)
++ (NSURLRequest *)fetchCommentAdd:(NSDictionary *)parameters
+                          success:(void (^)(id result))success
+                          failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:USER_COMENTADD]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+
+}
++ (NSURLRequest *)fetchCommentList:(NSDictionary *)parameters
+                           success:(void (^)(id result))success
+                           failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:USER_COMENTLIST]
+                                         parameters:parameters
+                                            success:^(id data) {
+                                                success(data);
+                                            }
+                                            failure:^(NSError *error) {
+                                                failure(error);
+                                            }];
+    return request;
+
+}
++ (NSURLRequest *)fetchLogin:(NSDictionary *)parameters
+                     success:(void (^)(id result))success
+                     failure:(void (^)(NSError *error))failure
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:USER_LOGIN]
+                                        parameters:parameters
+                                           success:^(id data) {
+                                               success(data);
+                                           }
+                                           failure:^(NSError *error) {
+                                               failure(error);
+                                           }];
+    return request;
+    
+}
++ (NSURLRequest *)fetchRegist:(NSDictionary *)parameters
+                     success:(void (^)(id result))success
+                     failure:(void (^)(NSError *error))failure
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:USER_REGIST]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+    
+}
++ (NSURLRequest *)fetchUpdatePsw:(NSDictionary *)parameters
+                      success:(void (^)(id result))success
+                      failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:USER_UPDATEPSW]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+
+}
++ (NSURLRequest *)fetchForgetPsw:(NSDictionary *)parameters
+                         success:(void (^)(id result))success
+                         failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:USER_FOEGETPSW]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+    
+}
++ (NSURLRequest *)fetchUserInfo:(NSDictionary *)parameters
+                         success:(void (^)(id result))success
+                         failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:USER_INFO]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+    
+}
++ (NSURLRequest *)fetchGetResigetCode:(NSDictionary *)parameters
+                         success:(void (^)(id result))success
+                         failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:USER_GET_CODE]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+    
+}
++ (NSURLRequest *)fetchForgetCode:(NSDictionary *)parameters
+                         success:(void (^)(id result))success
+                         failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:USER_FORGET_CODE]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+    
+}
++ (NSURLRequest *)fetchGetCollect:(NSDictionary *)parameters
+                         success:(void (^)(id result))success
+                         failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:USER_COLLECT]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+    
+}
++ (NSURLRequest *)fetchAddCollect:(NSDictionary *)parameters
+                         success:(void (^)(id result))success
+                         failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:USER_ADD_COLLECT]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+    
+}
++ (NSURLRequest *)fetchCancelCollect:(NSDictionary *)parameters
+                         success:(void (^)(id result))success
+                         failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:USER_CANCEL_COLLECT]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+    
+}
++ (NSURLRequest *)fetchAddress:(NSDictionary *)parameters
+                             success:(void (^)(id result))success
+                             failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:USER_ADD]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+    
+}
++ (NSURLRequest *)fetchaddressUpdate:(NSDictionary *)parameters
+                             success:(void (^)(id result))success
+                             failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:USER_UPDATE]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+    
+}
++ (NSURLRequest *)fetchaddressList:(NSDictionary *)parameters
+                           success:(void (^)(id result))success
+                           failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:USER_LIST]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+    
+}
++ (NSURLRequest *)fetchCityList:(NSDictionary *)parameters
+                           success:(void (^)(id result))success
+                           failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:USER_CITY_LIST]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+    
+}
++ (NSURLRequest *)fetchaddressDefault:(NSDictionary *)parameters
+                           success:(void (^)(id result))success
+                           failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:USER_SETDEFAULT]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+    
+}
+@end

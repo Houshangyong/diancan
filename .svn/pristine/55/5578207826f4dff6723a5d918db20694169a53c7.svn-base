@@ -1,0 +1,82 @@
+//
+//  HNCFFeedViewController.m
+//  HNCF
+//
+//  Created by houshangyong on 15/11/23.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFFeedViewController.h"
+#import "HNCFCommmon.h"
+
+@interface HNCFFeedViewController ()<HNCFNaViewDelegate>
+@property (nonatomic , strong) HNCFNaView *naView;
+@end
+
+@implementation HNCFFeedViewController
+- (HNCFNaView *)naView
+{
+    if (!_naView) {
+        _naView = [[HNCFNaView alloc]initWithFrame:CGRectMake(0, 20, HNCFWidth, 44)];
+        _naView.delegate = self;
+    }
+    return _naView;
+}
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.tabBarController.tabBar.hidden = YES;
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    [self.naView setHomeBannerData:@"意见反馈" locationImage:YES rightButton:YES];
+    self.navigationItem.leftBarButtonItem =[[UIBarButtonItem alloc]initWithCustomView:self.naView];
+    self.textView.layer.borderColor = [[UIColor lightGrayColor]CGColor];
+    self.textView.layer.borderWidth = 0.5;
+    self.textView.placeholder = @"请输入您对我们的意见或建议我们会尽快处理";
+
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+- (BOOL)textView:(UITextView *)textView1 shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text{
+    NSCharacterSet *doneButtonCharacterSet = [NSCharacterSet newlineCharacterSet];
+    NSRange replacementTextRange = [text rangeOfCharacterFromSet:doneButtonCharacterSet];
+    NSUInteger location = replacementTextRange.location;
+    if (textView1.text.length + text.length > 140){
+        if (location != NSNotFound){
+            [textView1 resignFirstResponder];
+        }
+        return NO;
+    }
+    else if (location != NSNotFound){
+        [textView1 resignFirstResponder];
+        return NO;
+    }
+    return YES;
+}
+
+- (IBAction)feedButton:(id)sender;
+{
+    if ([self.textView.text isEqualToString:@"请输入您对我们的意见或建议我们会尽快处理"]) {
+        [MJProgressHUD showHUDWithText:@"反馈不能为空" duration:1.0];
+    }
+    else{
+
+    }
+    
+        
+        
+}
+- (void)didSelectLeft;
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void)didSelectRight;
+{
+    
+}
+
+@end

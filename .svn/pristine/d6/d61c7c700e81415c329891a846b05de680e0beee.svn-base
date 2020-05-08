@@ -1,0 +1,101 @@
+//
+//  HNCFSetViewController.m
+//  HNCF
+//
+//  Created by houshangyong on 15/11/27.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFSetViewController.h"
+#import "HNCFCommmon.h"
+
+@interface HNCFSetViewController ()
+<HNCFNaViewDelegate>
+@property (nonatomic , strong) HNCFNaView *naView;
+@property (nonatomic ,strong) NSArray *dataArray;
+
+@end
+
+@implementation HNCFSetViewController
+
+- (HNCFNaView *)naView
+{
+    if (!_naView) {
+        _naView = [[HNCFNaView alloc]initWithFrame:CGRectMake(0, 20, HNCFWidth, 44)];
+        _naView.delegate = self;
+    }
+    return _naView;
+}
+- (NSArray *)dataArray
+{
+    if (!_dataArray) {
+        _dataArray = @[@{@"title":@"修改密码"},
+                       @{@"title":@"免责声明"},
+                       @{@"title":@"注销登录"}];
+    }
+    return _dataArray;
+}
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.tabBarController.tabBar.hidden = YES;
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    [self.naView setHomeBannerData:@"设置" locationImage:YES rightButton:YES];
+    self.navigationItem.leftBarButtonItem =[[UIBarButtonItem alloc]initWithCustomView:self.naView];
+    self.mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.mainTableView.scrollEnabled = NO;
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)didSelectLeft;
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void)didSelectRight;
+{
+    
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
+{
+    return [self.dataArray count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+    static NSString *CellIdentifier = @"HNCFSetCell";
+    HNCFSetCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"HNCFSetCell" owner:self options:nil];
+        cell = [nib objectAtIndex:0];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+    }
+    id model = [self.dataArray objectAtIndex:indexPath.row];
+    cell.nameLabel.text = [model objectForKey:@"title"];
+    
+    return cell;
+    
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+    switch (indexPath.row) {
+        case 0:
+        {
+            //修改密码
+            HNCFModifyPswViewController *modifypswViewController = [[HNCFModifyPswViewController alloc]init];
+            [self.navigationController pushViewController:modifypswViewController animated:YES];
+            
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+@end

@@ -30,7 +30,7 @@
         _Button.frame = CGRectZero;
         [_Button setTitle:@"全部                  " forState:UIControlStateNormal];
         [_Button setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-        _Button.font = [UIFont systemFontOfSize:16];
+        _Button.font = [UIFont systemFontOfSize:15];
         _Button.tag = 0;
         _Button.titleLabel.textAlignment = NSTextAlignmentLeft;
 
@@ -46,9 +46,9 @@
     if (!_oneButton) {
         _oneButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _oneButton.frame = CGRectZero;
-        [_oneButton setTitle:@"米饭套餐" forState:UIControlStateNormal];
+        [_oneButton setTitle:@"热门推荐" forState:UIControlStateNormal];
         [_oneButton setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
-        _oneButton.font = [UIFont systemFontOfSize:16];
+        _oneButton.font = [UIFont systemFontOfSize:15];
         _oneButton.tag = 1;
 
         [_oneButton bk_addEventHandler:^(id sender) {
@@ -62,9 +62,9 @@
     if (!_twoButton) {
         _twoButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _twoButton.frame = CGRectZero;
-        [_twoButton setTitle:@"面食类" forState:UIControlStateNormal];
+        [_twoButton setTitle:@"热销品" forState:UIControlStateNormal];
         [_twoButton setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
-        _twoButton.font = [UIFont systemFontOfSize:16];
+        _twoButton.font = [UIFont systemFontOfSize:15];
 
         _twoButton.tag = 2;
 
@@ -80,10 +80,10 @@
     if (!_threeButton) {
         _threeButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _threeButton.frame = CGRectZero;
-        [_threeButton setTitle:@"素炒类" forState:UIControlStateNormal];
+        [_threeButton setTitle:@"特价品" forState:UIControlStateNormal];
         [_threeButton setTitleColor:[UIColor darkTextColor] forState:UIControlStateNormal];
         _threeButton.tag = 3;
-        _threeButton.font = [UIFont systemFontOfSize:18];
+        _threeButton.font = [UIFont systemFontOfSize:15];
 
         [_threeButton bk_addEventHandler:^(id sender) {
             [self didselectButton:_threeButton];

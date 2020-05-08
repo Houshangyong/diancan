@@ -1,0 +1,23 @@
+//
+//  HNCFLoginViewController.h
+//  HNCF
+//
+//  Created by houshangyong on 15/11/21.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface HNCFLoginViewController : UIViewController
+@property (nonatomic ,strong) IBOutlet UIView *phoneView;
+@property (nonatomic ,strong) IBOutlet UIView *pswView;
+@property (nonatomic ,strong) IBOutlet UITextField *phoneText;
+@property (nonatomic ,strong) IBOutlet UITextField *pswText;
+@property (nonatomic ,strong) IBOutlet UIButton *forgetPsw;
+- (IBAction)forgetPswButton:(id)sender;
+@property (nonatomic ,strong) IBOutlet UIButton *loginButton;
+@property (nonatomic ,strong) IBOutlet UIButton *resigetButton;
+- (IBAction)loginButton:(id)sender;
+- (IBAction)resigetButton:(id)sender;
+
+@end

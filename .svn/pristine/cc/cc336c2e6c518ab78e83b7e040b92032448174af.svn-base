@@ -1,0 +1,150 @@
+//
+//  HNCFOrderViewController.m
+//  HNCF
+//
+//  Created by houshangyong on 15/11/27.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFMyOrderViewController.h"
+#import "HNCFCommmon.h"
+
+@interface HNCFMyOrderViewController ()<HNCFNaViewDelegate,HNCFMyAddressViewControllerDelegate>
+@property (nonatomic , strong) HNCFNaView *naView;
+@property (nonatomic , strong) id model;
+
+@end
+
+@implementation HNCFMyOrderViewController
+- (NSMutableArray *)resultArray
+{
+    if (!_resultArray) {
+        _resultArray = [NSMutableArray arrayWithCapacity:0];
+    }
+    return _resultArray;
+}
+- (HNCFNaView *)naView
+{
+    if (!_naView) {
+        _naView = [[HNCFNaView alloc]initWithFrame:CGRectMake(0, 20, HNCFWidth, 44)];
+        _naView.delegate = self;
+    }
+    return _naView;
+}
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    [HNCF_APP_DELEGATE.tabBarController setTabBarHidden:YES];
+    
+  
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    self.view.backgroundColor = [UIColor whiteColor];
+
+    [self.naView setHomeBannerData:@"订单确认" locationImage:YES rightButton:YES leftButton:NO rightImage:[UIImage imageNamed:@""]];
+    self.navigationItem.leftBarButtonItem =[[UIBarButtonItem alloc]initWithCustomView:self.naView];
+    self.priceLabel.text = [NSString stringWithFormat:@"%@",self.price];
+    self.mainTableViews.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.addressView bk_whenTapped:^{
+        HNCFMyAddressViewController *myaddressViewController = [[HNCFMyAddressViewController alloc]init];
+        myaddressViewController.delegate = self;
+        [self.navigationController pushViewController:myaddressViewController animated:YES];
+    }];
+    [HNCFRequestManager fetchGetDefault:@{} success:^(id result) {
+        NSInteger code = [[result objectForKey:@"code"]integerValue];
+        if (code == 0) {
+            self.model = [result objectForKey:@"result"];
+            NSDictionary *model = [result objectForKey:@"result"];
+            self.nameLabel.text = [NSString stringWithFormat:@"联系人:%@ %@",[model objectForKey:@"shouhuoren"],[model objectForKey:@"mobile"]];
+            self.addressLabel.text = [NSString stringWithFormat:@"%@%@%@",[model objectForKey:@"shi"],[model objectForKey:@"xian"],[model objectForKey:@"jiedao"]];
+
+        }
+    } failure:^(NSError *error) {
+        
+    }];
+
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+- (void)didSelectLeft;
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void)didSelectRight;
+{
+    
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
+{
+    return [self.resultArray count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+    static NSString *CellIdentifier = @"HNCFCollectCell";
+    HNCFCollectCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"HNCFCollectCell" owner:self options:nil];
+        cell = [nib objectAtIndex:0];
+        
+    }
+    cell.collectButton.layer.cornerRadius = 15;
+    cell.collectButton.layer.masksToBounds = YES;
+    cell.collectButton.hidden = YES;
+    HNCFFoodListModel *dataModel = [self.resultArray objectAtIndex:indexPath.row];
+    dataModel.section = [indexPath section];
+    dataModel.indexRow = indexPath.row;
+    cell.nameLabel.text = dataModel.foodName;
+    cell.prictLabel.text = [NSString stringWithFormat:@"￥%.2f",[dataModel.foodPrice floatValue]];
+
+    return cell;
+    
+}
+
+//提交订单
+- (IBAction)PaySelectButton:(id)sender;
+{
+    NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
+    CGFloat date = time*1000;
+    
+    
+    NSArray *array = [[NSString stringWithFormat:@"%f",date] componentsSeparatedByString:@"."];
+    NSString *codeString = [NSString stringWithFormat:@"A%@%@",[array objectAtIndex:0],[NSString stringWithFormat:@"%d", arc4random()%9000+1000]];
+//    NSLog(@"%@",[NSString stringWithFormat:@"A%@%@",[array objectAtIndex:0],[NSString stringWithFormat:@"%d", arc4random()%9000+1000]]);
+    //code还没处理
+   [HNCFRequestManager fetchConformOrder:@{@"code":codeString,@"add_street":self.addressLabel.text,@"add_username":[self.model objectForKey:@"shouhuoren"],@"add_phone":[self.model objectForKey:@"mobile"]} success:^(id result) {
+       NSInteger code = [[result objectForKey:@"code"]integerValue];
+       NSLog(@"result:::%@",result);
+
+       if (code ==0) {
+           //go订单支付
+           HNCFPayViewController *payViewController = [[HNCFPayViewController alloc]init];
+           payViewController.shouhuoRen = self.nameLabel.text;
+           payViewController.address = self.addressLabel.text;
+           payViewController.price = self.priceLabel.text;
+
+           [self.navigationController pushViewController:payViewController animated:YES];
+       }else
+       {
+           [MJProgressHUD showHUDWithText:[result objectForKey:@"msg"] duration:1.0];
+
+       }
+       
+    } failure:^(NSError *error) {
+        
+    }];
+
+}
+//
+- (void)HNCFMyAddressViewController:(HNCFMyAddressViewController*)viewController modelAddress:(id)model;
+{
+    self.model = model;
+    self.nameLabel.text = [NSString stringWithFormat:@"联系人:%@ %@",[model objectForKey:@"shouhuoren"],[model objectForKey:@"mobile"]];
+    //[model objectForKey:@"shi"],[model objectForKey:@"xian"]
+    self.addressLabel.text = [NSString stringWithFormat:@"%@",[model objectForKey:@"jiedao"]];
+}
+@end

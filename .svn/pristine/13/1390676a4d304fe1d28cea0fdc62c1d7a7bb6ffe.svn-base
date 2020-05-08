@@ -1,0 +1,199 @@
+//
+//  HNCFMyCollectViewController.m
+//  HNCF
+//
+//  Created by houshangyong on 15/11/22.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFMyCollectViewController.h"
+#import "HNCFCommmon.h"
+
+@interface HNCFMyCollectViewController ()<HNCFNaViewDelegate,UITableViewDataSource,UITableViewDelegate,PullTableViewDelegate>
+@property (nonatomic , strong) HNCFNaView *naView;
+@property (nonatomic , strong)  PullTableView*mainTableView;
+@property (nonatomic )  NSInteger pageIndex;
+@property (nonatomic , strong)  NSMutableArray *collectArray;
+
+@property (nonatomic , strong)  NSMutableArray *collectArray1;
+
+@end
+
+@implementation HNCFMyCollectViewController
+- (NSMutableArray *)collectArray
+{
+    if (!_collectArray) {
+        _collectArray = [NSMutableArray arrayWithCapacity:0];
+    }
+    return _collectArray;
+}
+- (NSMutableArray *)collectArray1
+{
+    if (!_collectArray1) {
+        _collectArray1 = [NSMutableArray arrayWithCapacity:0];
+    }
+    return _collectArray1;
+}
+- (HNCFNaView *)naView
+{
+    if (!_naView) {
+        _naView = [[HNCFNaView alloc]initWithFrame:CGRectMake(0, 20, HNCFWidth, 44)];
+        _naView.delegate = self;
+    }
+    return _naView;
+}
+- (PullTableView *)mainTableView
+{
+    if (!_mainTableView) {
+        _mainTableView = [[PullTableView alloc]initWithFrame:CGRectMake(0, 0, HNCFWidth, HNCFHeight-64) style:UITableViewStylePlain];
+        _mainTableView.delegate = self;
+        _mainTableView.dataSource = self;
+        _mainTableView.pullDelegate = self;
+        _mainTableView.rowHeight = 80;
+        _mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+
+    }
+    return _mainTableView;
+}
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.tabBarController.tabBar.hidden = YES;
+    self.pageIndex = 1;
+    [self requestCollect];
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    [self.naView setHomeBannerData:@"我的收藏" locationImage:YES rightButton:YES leftButton:NO];
+    self.navigationItem.leftBarButtonItem =[[UIBarButtonItem alloc]initWithCustomView:self.naView];
+    [self.view addSubview:self.mainTableView];
+}
+- (void)requestCollect
+{
+    if ([HNCFUserDefaultsUtil globalObjectForKey:kMTCurrentUserInfo]) {
+        NSDictionary *userInfo = [HNCFUserDefaultsUtil globalObjectForKey:kMTCurrentUserInfo];
+        [HNCFRequestManager fetchGetCollect:@{@"uid":[userInfo objectForKey:@"uid"],@"page":[NSString stringWithFormat:@"%ld",self.pageIndex]} success:^(id result) {
+            NSInteger status = [[result objectForKey:@"code"]integerValue];
+            if (status ==0) {
+                if ([[result objectForKey:@"result"]count]*self.pageIndex ==0) {
+  
+                }else{
+                    [self.collectArray1 addObjectsFromArray:[result objectForKey:@"result"]];
+
+                    if (self.pageIndex ==1) {
+                        self.collectArray = [result objectForKey:@"result"];
+                        [self.mainTableView reloadData];
+
+                    }else{
+                        self.collectArray = self.collectArray1;
+                        [self.mainTableView reloadData];
+
+                    }
+                }
+            }
+            
+        } failure:^(NSError *error) {
+            
+        }];
+
+    }else{
+       
+    }
+   }
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+- (void)didSelectLeft;
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void)didSelectRight;
+{
+    
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
+{
+    return [self.collectArray count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+    static NSString *CellIdentifier = @"HNCFCollectCell";
+    HNCFCollectCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"HNCFCollectCell" owner:self options:nil];
+        cell = [nib objectAtIndex:0];
+        
+    }
+    cell.collectButton.layer.cornerRadius = 15;
+    cell.collectButton.layer.masksToBounds = YES;
+    id model = [self.collectArray objectAtIndex:indexPath.row];
+    cell.nameLabel.text = [model objectForKey:@"title"];
+    cell.prictLabel.text = [model objectForKey:@""];
+[cell.collectButton bk_addEventHandler:^(id sender) {
+    [self cancelCollect:[model objectForKey:@"id"]];
+} forControlEvents:UIControlEventTouchUpInside];
+    [cell.headImage sd_setImageWithURL:[NSURL URLWithString:@"thumb"] placeholderImage:nil];
+    return cell;
+
+}
+#pragma mark - PullTableViewDelegate
+
+- (void)pullTableViewDidTriggerRefresh:(PullTableView *)pullTableView
+{
+    [self performSelector:@selector(refreshTable5) withObject:nil afterDelay:1.0f];
+}
+
+- (void)pullTableViewDidTriggerLoadMore:(PullTableView *)pullTableView
+{
+    [self performSelector:@selector(loadMoreDataToTable5) withObject:nil afterDelay:1.0f];
+}
+#pragma mark - Refresh and load more methods
+
+- (void) refreshTable5
+{
+    /*
+     
+     Code to actually refresh goes here.
+     
+     */
+    self.pageIndex = 1;
+    [self requestCollect];
+    self.mainTableView.pullLastRefreshDate = [NSDate date];
+    self.mainTableView.pullTableIsRefreshing = NO;
+}
+
+- (void) loadMoreDataToTable5
+{
+    /*
+     
+     Code to actually load more data goes here.
+     
+     */
+    self.pageIndex ++;
+    [self requestCollect];
+
+    
+    self.mainTableView.pullTableIsLoadingMore = NO;
+}
+- (void)cancelCollect:(NSString *)addcollectid
+{
+    [MJProgressHUD showHUDWithText1:@"加载中.."];
+    NSDictionary *userInfo = [HNCFUserDefaultsUtil globalObjectForKey:kMTCurrentUserInfo];
+
+    [HNCFRequestManager fetchCancelCollect:@{@"uid":[userInfo objectForKey:@"uid"],@"addcollectid":addcollectid} success:^(id result) {
+        NSInteger code = [[result objectForKey:@"code"]integerValue];
+        if (code ==0) {
+            [MJProgressHUD hide1];
+            [MJProgressHUD showHUDWithText:[result objectForKey:@"msg"] duration:1.0];
+            self.pageIndex = 1;
+
+            [self requestCollect];
+        }
+        
+    } failure:^(NSError *error) {
+        
+    }];
+}
+@end

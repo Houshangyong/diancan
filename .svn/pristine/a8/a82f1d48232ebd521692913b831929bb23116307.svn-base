@@ -1,0 +1,105 @@
+//
+//  HNCFNaView.m
+//  HNCF
+//
+//  Created by Apple on 15/11/18.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFNaView.h"
+#import "HNCFCommmon.h"
+
+@interface HNCFNaView ()
+@property (nonatomic , strong) UIButton *leftButton;
+@property (nonatomic , strong) UIImageView *locationImage;
+
+@property (nonatomic , strong) UILabel *titleLabel;
+@property (nonatomic , strong) UIButton *rightButton;
+
+
+@end
+
+@implementation HNCFNaView
+- (UIButton *)leftButton
+{
+    if (!_leftButton) {
+        _leftButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _leftButton.frame = CGRectMake(0, 0, 30, 30);
+        [_leftButton setBackgroundImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
+        _leftButton.centerY = self.height/2;
+
+        [_leftButton bk_addEventHandler:^(id sender) {
+            [self didSelectLeft];
+        } forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _leftButton;
+}
+- (UIButton *)rightButton
+{
+    if (!_rightButton) {
+        _rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _rightButton.frame = CGRectMake(self.width-60, 0, 40, 40);
+        [_rightButton setTitle:@"right" forState:UIControlStateNormal];
+        _rightButton.centerY = self.height/2;
+
+        [_rightButton bk_addEventHandler:^(id sender) {
+            [self didSelectRight];
+        } forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _rightButton;
+}
+- (UIImageView *)locationImage
+{
+    if (!_locationImage) {
+        _locationImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 0, 20, 20)];
+        _locationImage.backgroundColor = [UIColor whiteColor];
+        _locationImage.centerY = self.height/2;
+
+    }
+    return _locationImage;
+}
+- (UILabel*)titleLabel
+{
+    if (!_titleLabel) {
+        _titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.locationImage.maxX+3, 0, 200, 30)];
+        _titleLabel.centerY = self.height/2;
+        _titleLabel.centerX = self.centerX-20;
+        _titleLabel.textColor = [UIColor blackColor];
+        _titleLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _titleLabel;
+}
+-(instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+        [self addSubview:self.leftButton];
+        [self addSubview:self.rightButton];
+        [self addSubview:self.locationImage];
+        [self addSubview:self.titleLabel];
+
+    }
+    return self;
+}
+- (void)didSelectLeft
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectLeft)]) {
+        [self.delegate didSelectLeft];
+    }
+
+}
+- (void)didSelectRight
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(didSelectRight)]) {
+        [self.delegate didSelectRight];
+    }
+    
+}
+- (void)setHomeBannerData:(NSString *)titleString locationImage:(BOOL)hide rightButton:(BOOL)hide1;
+{
+    self.titleLabel.text = titleString;
+    self.locationImage.hidden = hide;
+    self.rightButton.hidden = hide;
+    self.rightButton.enabled = !hide;
+
+}
+@end

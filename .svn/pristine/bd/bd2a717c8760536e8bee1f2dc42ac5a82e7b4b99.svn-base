@@ -1,0 +1,155 @@
+//
+//  HNCFOrderHeadVIew.m
+//  HNCF
+//
+//  Created by houshangyong on 15/11/22.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFOrderHeadVIew.h"
+#import "HNCFCommmon.h"
+
+@interface HNCFOrderHeadVIew ()
+@property (nonatomic, strong) UIButton *oneButton;
+@property (nonatomic, strong) UIButton *twoButton;
+@property (nonatomic, strong) UIButton *threeButton;
+@property (nonatomic, strong) UIView *animationView;
+@end
+@implementation HNCFOrderHeadVIew
+- (UIButton *)oneButton
+{
+    if (!_oneButton) {
+        _oneButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _oneButton.frame = CGRectZero;
+        [_oneButton setTitle:@"进行中" forState:UIControlStateNormal];
+        [_oneButton setTitleColor:DEFAULT_COLOR forState:UIControlStateNormal];
+        _oneButton.font = [UIFont systemFontOfSize:14];
+        _oneButton.tag = 0;
+        
+        [_oneButton bk_addEventHandler:^(id sender) {
+            [self didselectButton:_oneButton];
+        } forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _oneButton;
+}
+- (UIButton *)twoButton
+{
+    if (!_twoButton) {
+        _twoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _twoButton.frame = CGRectZero;
+        [_twoButton setTitle:@"已完成" forState:UIControlStateNormal];
+        [_twoButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        _twoButton.font = [UIFont systemFontOfSize:14];
+        
+        _twoButton.tag = 1;
+        
+        [_twoButton bk_addEventHandler:^(id sender) {
+            [self didselectButton:_twoButton];
+            
+        } forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _twoButton;
+}
+- (UIButton *)threeButton
+{
+    if (!_threeButton) {
+        _threeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _threeButton.frame = CGRectZero;
+        [_threeButton setTitle:@"待评价" forState:UIControlStateNormal];
+        [_threeButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        _threeButton.tag = 2;
+        _threeButton.font = [UIFont systemFontOfSize:14];
+        
+        [_threeButton bk_addEventHandler:^(id sender) {
+            [self didselectButton:_threeButton];
+            
+        } forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _threeButton;
+}
+- (UIView *)animationView
+{
+    if (!_animationView) {
+        _animationView = [[UIView alloc]initWithFrame:CGRectZero];
+        _animationView.backgroundColor = DEFAULT_COLOR;
+    }
+    return _animationView;
+}
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self=[super initWithFrame:frame]) {
+        self.backgroundColor = [UIColor whiteColor];
+        [self addSubview:self.oneButton];
+        [self addSubview:self.twoButton];
+        [self addSubview:self.threeButton];
+        [self addSubview:self.animationView];
+        
+        
+        
+    }
+    return self;
+}
+- (void)resetPeraonal:(id)model;
+{
+    [self.oneButton setTitle:[NSString stringWithFormat:@"可使用 %@",[[model objectForKey:@"datacount"] objectForKey:@"c_unused"]] forState:UIControlStateNormal];
+    [self.twoButton setTitle:[NSString stringWithFormat:@"已使用 %@",[[model objectForKey:@"datacount"] objectForKey:@"c_used"]] forState:UIControlStateNormal];
+    [self.threeButton setTitle:[NSString stringWithFormat:@"已失效 %@",[[model objectForKey:@"datacount"] objectForKey:@"c_expires"]] forState:UIControlStateNormal];
+    
+}
+- (void)didselectButton:(UIButton *)one
+{
+    switch ([one tag]) {
+        case 0:
+        {
+            [UIView animateWithDuration:0.3 animations:^{
+                [self.oneButton setTitleColor:DEFAULT_COLOR forState:UIControlStateNormal];
+                self.animationView.backgroundColor = DEFAULT_COLOR;
+                self.animationView.centerX = self.oneButton.centerX;
+                [self.twoButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+                [self.threeButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+            }];
+            
+            
+            
+        }
+            break;
+        case 1:
+        {
+            [UIView animateWithDuration:0.3 animations:^{
+                [self.oneButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+                self.animationView.backgroundColor = DEFAULT_COLOR;
+                self.animationView.centerX = self.twoButton.centerX;
+                [self.twoButton setTitleColor:DEFAULT_COLOR forState:UIControlStateNormal];
+                [self.threeButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+            }];
+            
+            
+        }
+            break;
+        case 2:
+        {
+            [UIView animateWithDuration:0.3 animations:^{
+                [self.oneButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+                self.animationView.backgroundColor = DEFAULT_COLOR;
+                self.animationView.centerX = self.threeButton.centerX;
+                [self.twoButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+                [self.threeButton setTitleColor:DEFAULT_COLOR forState:UIControlStateNormal];
+                
+            }];
+        }
+            break;
+        default:
+            break;
+    }
+    if (self.delegate && [self.delegate respondsToSelector:@selector(withUserIndex:index:)]) {
+        [self.delegate withUserIndex:self index:one.tag];
+    }
+    
+}
+- (void)layoutSubviews {
+    self.oneButton.frame = CGRectMake(10, 0, (self.width-30)/3.0, self.height);
+    self.twoButton.frame = CGRectMake(self.oneButton.maxX+10, 0, (self.width-30)/3.0, self.height);
+    self.threeButton.frame = CGRectMake(self.twoButton.maxX+10, 0,(self.width-30)/3.0, self.height);
+    self.animationView.frame = CGRectMake(0,self.height -1, (self.width-30)/3, 1);
+}
+
+@end

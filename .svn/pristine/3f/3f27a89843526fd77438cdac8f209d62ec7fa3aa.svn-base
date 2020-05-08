@@ -1,0 +1,130 @@
+//
+//  HNCFOrderViewController.m
+//  HNCF
+//
+//  Created by Apple on 15/11/17.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFOrderViewController.h"
+#import "HNCFCommmon.h"
+
+@interface HNCFOrderViewController ()<HNCFOrderHeadVIewDelegate,UITableViewDelegate,UITableViewDataSource,PullTableViewDelegate>
+@property (nonatomic, strong) HNCFOrderHeadVIew *laundrycouponsView;
+@property (nonatomic , strong)  PullTableView*mainTableView;
+@property (nonatomic )  NSInteger pageIndex;
+
+@end
+
+@implementation HNCFOrderViewController
+
+- (HNCFOrderHeadVIew *)laundrycouponsView
+{
+    if (!_laundrycouponsView) {
+        _laundrycouponsView = [[HNCFOrderHeadVIew alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 50)];
+        _laundrycouponsView.delegate = self;
+        
+        
+    }
+    return _laundrycouponsView;
+}
+- (PullTableView *)mainTableView
+{
+    if (!_mainTableView) {
+        _mainTableView = [[PullTableView alloc]initWithFrame:CGRectMake(0, self.laundrycouponsView.maxY+2, HNCFWidth, HNCFHeight-64-100) style:UITableViewStylePlain];
+        _mainTableView.delegate = self;
+        _mainTableView.dataSource = self;
+        _mainTableView.pullDelegate = self;
+        _mainTableView.rowHeight = 100;
+        _mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _mainTableView.separatorStyle = UITableViewCellSelectionStyleNone;
+
+    }
+    return _mainTableView;
+}
+
+- (void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+    self.pageIndex = 1;
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    self.title = @"我的订单";
+    [self.view addSubview:self.laundrycouponsView];
+    [self.view addSubview:self.mainTableView];
+    
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
+{
+    return 3;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+    static NSString *CellIdentifier = @"HNCFMyOrderCell";
+    HNCFMyOrderCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"HNCFMyOrderCell" owner:self options:nil];
+        cell = [nib objectAtIndex:0];
+        
+    }
+
+    
+    return cell;
+    
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+#pragma mark - PullTableViewDelegate
+
+- (void)pullTableViewDidTriggerRefresh:(PullTableView *)pullTableView
+{
+    [self performSelector:@selector(refreshTable5) withObject:nil afterDelay:1.0f];
+}
+
+- (void)pullTableViewDidTriggerLoadMore:(PullTableView *)pullTableView
+{
+    [self performSelector:@selector(loadMoreDataToTable5) withObject:nil afterDelay:1.0f];
+}
+#pragma mark - Refresh and load more methods
+
+- (void) refreshTable5
+{
+    /*
+     
+     Code to actually refresh goes here.
+     
+     */
+    self.pageIndex = 1;
+    
+    self.mainTableView.pullLastRefreshDate = [NSDate date];
+    self.mainTableView.pullTableIsRefreshing = NO;
+}
+
+- (void) loadMoreDataToTable5
+{
+    /*
+     
+     Code to actually load more data goes here.
+     
+     */
+    self.pageIndex ++;
+    
+    
+    self.mainTableView.pullTableIsLoadingMore = NO;
+}
+
+- (void)withUserIndex:(HNCFOrderHeadVIew *)headView index:(NSInteger)index;
+{
+    
+}
+
+@end

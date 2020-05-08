@@ -1,0 +1,42 @@
+//
+//  HNCFUserDefaultsUtil.m
+//  HNCF
+//
+//  Created by Apple on 15/11/18.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFUserDefaultsUtil.h"
+#import "HNCFCommmon.h"
+
+NSString *const kMTCurrentUserInfo     = @"kMTCurrentUserInfo"; // 当前登录的用户信息
+
+@implementation HNCFUserDefaultsUtil
+#pragma mark - Global
++ (void)setGlobalObject:(id)value forKey:(NSString *)key {
+    if (!key || key.length == 0) return;
+    
+    [[NSUserDefaults standardUserDefaults] setValue:value forKey:key];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++ (id)globalObjectForKey:(NSString *)key {
+    if (!key || key.length == 0) return nil;
+    
+    return [[NSUserDefaults standardUserDefaults] valueForKey:key];
+}
++(BOOL)isLogin;
+//清楚用户登录信息
+{
+    if (![FileOperation isEmptyOrNull:[HNCFUserDefaultsUtil globalObjectForKey:kMTCurrentUserInfo]]) {
+        return YES;
+    }
+    
+    return NO;
+
+}
++(void)cleanUserInfo;
+{
+    [HNCFUserDefaultsUtil setGlobalObject:nil forKey:kMTCurrentUserInfo];
+}
+@end

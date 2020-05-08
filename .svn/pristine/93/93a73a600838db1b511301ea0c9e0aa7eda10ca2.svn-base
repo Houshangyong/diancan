@@ -1,0 +1,24 @@
+//
+//  HNCFFoodListModel.h
+//  HNCF
+//
+//  Created by houshangyong on 15/11/24.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface HNCFFoodListModel : NSObject
+
+@property (nonatomic,strong) NSString *foodName;
+@property (nonatomic,strong) NSString *foodSoldCount;//已售
+@property (nonatomic,strong) NSString *foodPrice;
+@property (nonatomic,strong) NSString *foodSelectCount;
+@property (nonatomic,strong) NSString *foodID;
+
+@property (nonatomic,assign) NSInteger section;
+@property (nonatomic,assign) NSInteger indexRow;
+
+-(void)setValue:(id)value forUndefinedKey:(NSString *)key;
+
+@end

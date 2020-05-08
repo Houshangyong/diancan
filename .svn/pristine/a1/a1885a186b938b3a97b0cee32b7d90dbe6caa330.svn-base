@@ -1,0 +1,17 @@
+//
+//  HNCFCollectCell.h
+//  HNCF
+//
+//  Created by houshangyong on 15/11/22.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface HNCFCollectCell : UITableViewCell
+@property (nonatomic ,strong) IBOutlet UIImageView *headImage;
+@property (nonatomic ,strong) IBOutlet UILabel *nameLabel;
+@property (nonatomic ,strong) IBOutlet UILabel *prictLabel;
+@property (nonatomic ,strong) IBOutlet UIButton *collectButton;
+
+@end

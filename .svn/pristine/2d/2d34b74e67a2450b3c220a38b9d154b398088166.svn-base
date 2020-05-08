@@ -1,0 +1,141 @@
+//
+//  HNCFRequestManager+app.m
+//  HNCF
+//
+//  Created by houshangyong on 15/11/21.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFRequestManager+app.h"
+#import "HNCFCommmon.h"
+
+#define COMMENT_ADD                                      @"comment/add.do"
+#define COMMENT_SHOP_LIST                                @"comment/shopcommentL.do"
+#define COMMENT_USER_LIST                                @"comment/list.do"
+#define SHOP_LIST                                        @"order/orderslist.do"
+#define SHOP_ADD                                         @"order/addToCart.do"
+#define SHOP_CONFORM_ORDER                               @"order/conformOrders.do"
+#define SHOP_PAY_ORDER                                   @"order/payOrder.do"
+#define CAR_LIST                                         @"order/cartlist.do"
+#define CAR_Delete                                       @"order/deleteOrder.do"
+#define ADD_Delete                                       @"addr/deleteAddr.do"
+
+@implementation HNCFRequestManager (app)
++ (NSURLRequest *)fetchAddDelete:(NSDictionary *)parameters
+                         success:(void (^)(id result))success
+                         failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:ADD_Delete]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+
+}
++ (NSURLRequest *)fetchCarDelete:(NSDictionary *)parameters
+                         success:(void (^)(id result))success
+                         failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:CAR_Delete]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+
+}
++ (NSURLRequest *)fetchCarList:(NSDictionary *)parameters
+                       success:(void (^)(id result))success
+                       failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:CAR_LIST]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+
+}
++ (NSURLRequest *)fetchShopcommentL:(NSDictionary *)parameters
+                            success:(void (^)(id result))success
+                            failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:COMMENT_SHOP_LIST]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+
+}
++ (NSURLRequest *)fetchPayOrder:(NSDictionary *)parameters
+                        success:(void (^)(id result))success
+                        failure:(void (^)(NSError *error))failure;{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:SHOP_PAY_ORDER]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+
+}
++ (NSURLRequest *)fetchShopAdd:(NSDictionary *)parameters
+                       success:(void (^)(id result))success
+                       failure:(void (^)(NSError *error))failure;{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:SHOP_ADD]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+
+}
++ (NSURLRequest *)fetchOrdersList:(NSDictionary *)parameters
+                          success:(void (^)(id result))success
+                          failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:SHOP_LIST]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+
+}
++ (NSURLRequest *)fetchConformOrder:(NSDictionary *)parameters
+                            success:(void (^)(id result))success
+                            failure:(void (^)(NSError *error))failure;{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:SHOP_CONFORM_ORDER]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+
+}
+@end

@@ -1,0 +1,337 @@
+//
+//  HNCFShopViewController.m
+//  HNCF
+//
+//  Created by Apple on 15/11/17.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFShopViewController.h"
+#import "HNCFCommmon.h"
+@interface HNCFShopViewController ()<UITableViewDelegate,UITableViewDataSource,PullTableViewDelegate,HNCFPayViewDelegate>
+{
+     NSMutableArray *menuArray;
+
+}
+@property (nonatomic , strong)  UITableView*mainTableView;
+@property (nonatomic )  NSInteger pageIndex;
+@property (nonatomic , strong)  HNCFPayView*payView;
+@property (nonatomic , strong) NSMutableArray *arrayFoodList;
+@property (nonatomic , strong) NSMutableArray *arraySelectResult;
+@property (nonatomic , strong) NSString *topicPrice;
+@property (nonatomic , strong) NSString *topicCount;
+
+@end
+
+@implementation HNCFShopViewController
+- (NSMutableArray *)arrayFoodList
+{
+    if (!_arrayFoodList) {
+        _arrayFoodList = [NSMutableArray arrayWithCapacity:0];
+    }
+    return _arrayFoodList;
+}
+- (NSMutableArray *)arraySelectResult
+{
+    if (!_arraySelectResult) {
+        _arraySelectResult = [NSMutableArray arrayWithCapacity:0];
+    }
+    return _arraySelectResult;
+}
+- (UITableView *)mainTableView
+{
+    if (!_mainTableView) {
+        _mainTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, HNCFWidth, HNCFHeight-64-50-50) style:UITableViewStylePlain];
+        _mainTableView.delegate = self;
+        _mainTableView.dataSource = self;
+//        _mainTableView.pullDelegate = self;
+        _mainTableView.rowHeight = 80;
+        _mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        
+    }
+    return _mainTableView;
+}
+- (HNCFPayView *)payView
+{
+    if (!_payView) {
+        _payView =[[HNCFPayView alloc]initWithFrame:CGRectMake(20, HNCFHeight-100-64, HNCFWidth-40, 40)];
+        _payView.delegate = self;
+        _payView.backgroundColor = [UIColor redColor];
+    }
+    return _payView;
+}
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [HNCF_APP_DELEGATE.tabBarController setTabBarHidden:NO];
+    [HNCF_APP_DELEGATE.tabBarController setbarge1:0];
+    [HNCFUserDefaultsUtil setGlobalObject:@{@"bageIndex":@"0"} forKey:@"bageIndex"];
+
+    self.pageIndex = 1;
+
+    [self.arrayFoodList removeAllObjects];
+    [self.arraySelectResult removeAllObjects];
+
+       [self.payView resetNumAndPrice:@{@"count":@"",@"totalPrice":@""}];
+    [self requestShop];
+    
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+self.title = @"购物车";
+    [self.view addSubview:self.mainTableView];
+    [self.view addSubview:self.payView];
+    self.view.backgroundColor = [UIColor whiteColor];
+
+  
+}
+- (void)requestShop
+{
+    if ([HNCFUserDefaultsUtil isLogin]) {
+        
+        [MJProgressHUD showHUDWithText1:@"加载中.."];
+
+    NSDictionary *userInfo = [HNCFUserDefaultsUtil globalObjectForKey:kMTCurrentUserInfo];
+
+    [HNCFRequestManager fetchCarList:@{@"uid":[userInfo objectForKey:@"uid"]} success:^(id result) {
+        NSInteger code = [[result objectForKey:@"code"]integerValue];
+        if (code == 0) {
+            [MJProgressHUD hide1];
+            NSArray *shopList = [result objectForKey:@"result"];
+//           menuArray = [@[] mutableCopy];
+
+//            [menuArray addObjectsFromArray:shopList];
+//            if (self.pageIndex ==1) {
+//                if ([[result objectForKey:@"result"] count]==0) {
+//                    [MJProgressHUD showHUDWithText:@"没有数据" duration:1.0];
+//                    
+//                }else{
+//
+//                for (int i = 0; i<[menuArray count]; i++) {
+//                    HNCFFoodListModel *dataModel =[[HNCFFoodListModel alloc] init];
+//                    dataModel.foodName = [NSString stringWithFormat:@"%@",[[[result objectForKey:@"result"] objectAtIndex:i] objectForKey:@"title"]];
+//                    dataModel.foodPrice= [NSString stringWithFormat:@"%@",[[[result objectForKey:@"result"] objectAtIndex:i] objectForKey:@"money"]];
+//                    dataModel.foodSelectCount= @"1";
+//                    dataModel.imageUrl= [NSString stringWithFormat:@"%@",[[[result objectForKey:@"result"] objectAtIndex:i] objectForKey:@"thumb"]];
+//
+//                    [self.arrayFoodList addObject:dataModel];
+//                }
+//                }
+//            }else{
+//                if ([[result objectForKey:@"result"] count] == 0) {
+//                    [MJProgressHUD showHUDWithText:@"已经是最后一页" duration:1.0];
+//                }else{
+                    for (int i = 0; i<[shopList count]; i++) {
+                        HNCFFoodListModel *dataModel =[[HNCFFoodListModel alloc] init];
+                        dataModel.foodName = [NSString stringWithFormat:@"%@",[[[result objectForKey:@"result"] objectAtIndex:i] objectForKey:@"title"]];
+                        dataModel.foodPrice= [NSString stringWithFormat:@"%@",[[[result objectForKey:@"result"] objectAtIndex:i] objectForKey:@"money"]];
+                        dataModel.imageUrl= [NSString stringWithFormat:@"%@",[[[result objectForKey:@"result"] objectAtIndex:i] objectForKey:@"thumb"]];
+                        dataModel.foodID =[NSString stringWithFormat:@"%@",[[[result objectForKey:@"result"] objectAtIndex:i] objectForKey:@"sl_id"]];
+                        dataModel.foodSelectCount= [NSString stringWithFormat:@"%@",[[[result objectForKey:@"result"] objectAtIndex:i] objectForKey:@"gonumber"]];
+                        
+                        [ self.arrayFoodList addObject:dataModel];
+                        
+//                    }
+
+//                }
+                
+            }
+                [self.mainTableView reloadData];
+            [self calculateTotalNumber];
+        }else{
+            [MJProgressHUD hide1];
+             [MJProgressHUD showHUDWithText:@"获取失败" duration:1.0];
+        }
+        
+    } failure:^(NSError *error) {
+        
+    }];
+    }else{
+        HNCFLoginViewController *login = [[HNCFLoginViewController alloc]init];
+        login.status = @"1";
+        UINavigationController *na = [[UINavigationController alloc]initWithRootViewController:login];
+        [self presentViewController:na animated:YES completion:^{
+            
+        }];
+    }
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
+{
+    return [self.arrayFoodList count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+    static NSString *CellIdentifier = @"HNCFShopCell";
+    HNCFShopCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"HNCFShopCell" owner:self options:nil];
+        cell = [nib objectAtIndex:0];
+        
+    }
+//    cell.num.layer.borderColor = [[UIColor lightGrayColor]CGColor];
+//    cell.num.layer.borderWidth = 1.0f;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    HNCFFoodListModel *dataModel = [self.arrayFoodList objectAtIndex:indexPath.row];
+    dataModel.section = [indexPath section];
+    dataModel.indexRow = indexPath.row;
+    
+    cell.addButton.indexRow = indexPath.row;
+    cell.addButton.section = [indexPath section];
+    cell.jianButton.indexRow = indexPath.row;
+    cell.jianButton.section = [indexPath section];
+    [cell.addButton addTarget:self action:@selector(btnClickPlus:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.jianButton addTarget:self action:@selector(btnClickReduce:) forControlEvents:UIControlEventTouchUpInside];
+    [cell setCellContent:dataModel indexPath:indexPath];
+
+    return cell;
+    
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+   
+}
+#pragma mark 选餐数量加减
+- (void)btnClickPlus:(HNCFButton *)sender
+{
+    HNCFFoodListModel *dataModel = [self.arrayFoodList  objectAtIndex:sender.indexRow];
+    
+    NSInteger count = [dataModel.foodSelectCount integerValue]+1;
+    dataModel.foodSelectCount = [NSString stringWithFormat:@"%ld",(long)count];
+    
+    [self.mainTableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:sender.indexRow inSection:0]] withRowAnimation:(UITableViewRowAnimationFade)];
+    
+    [self calculateTotalNumber];
+    
+    
+}
+- (void)btnClickReduce:(HNCFButton *)sender
+{
+    HNCFFoodListModel *dataModel = [self.arrayFoodList  objectAtIndex:sender.indexRow];
+    
+    NSInteger count = [dataModel.foodSelectCount integerValue];
+    if (count>0) {
+        count = count-1;
+    }
+    if (count ==0) {
+        NSString *messge = [NSString stringWithFormat:@"是否将%@移出购物车",dataModel.foodName];
+        [UIAlertView bk_showAlertViewWithTitle:@"是否删除？" message:messge cancelButtonTitle:@"取消" otherButtonTitles:@[@"确定"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+            if (buttonIndex ==1) {
+                //删除购物车内容
+                [self deleteShop:dataModel.foodID];
+            }
+        }];
+    }
+    dataModel.foodSelectCount = [NSString stringWithFormat:@"%ld",(long)count];
+    [self.mainTableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:sender.indexRow inSection:0]] withRowAnimation:(UITableViewRowAnimationFade)];
+    
+    [self calculateTotalNumber];
+    
+}
+
+//#pragma mark - PullTableViewDelegate
+//
+//- (void)pullTableViewDidTriggerRefresh:(PullTableView *)pullTableView
+//{
+//    [self performSelector:@selector(refreshTable5) withObject:nil afterDelay:1.0f];
+//}
+//
+//- (void)pullTableViewDidTriggerLoadMore:(PullTableView *)pullTableView
+//{
+//    [self performSelector:@selector(loadMoreDataToTable5) withObject:nil afterDelay:1.0f];
+//}
+//#pragma mark - Refresh and load more methods
+//
+//- (void) refreshTable5
+//{
+//    /*
+//     
+//     Code to actually refresh goes here.
+//     
+//     */
+//    self.pageIndex = 1;
+//    [self.arrayFoodList removeAllObjects];
+////    [menuArray removeAllObjects];
+//      [self requestShop];
+//    self.mainTableView.pullLastRefreshDate = [NSDate date];
+//    self.mainTableView.pullTableIsRefreshing = NO;
+//}
+//
+//- (void) loadMoreDataToTable5
+//{
+//    /*
+//     
+//     Code to actually load more data goes here.
+//     
+//     */
+//    self.pageIndex ++;
+//    [self requestShop];
+//
+//    
+//    self.mainTableView.pullTableIsLoadingMore = NO;
+//}
+- (void)withUserIndex:(HNCFPayView *)headView num:(NSString *)numString price:(NSString *)priceString;
+{
+    if ([numString isEqualToString:@"0"]||[numString length]==0) {
+        
+    }else{
+        NSLog(@"self.arraySelectResult:%@",self.arraySelectResult);
+    HNCFMyOrderViewController *orderVIewController = [[HNCFMyOrderViewController alloc]init];
+    orderVIewController.resultArray = self.arraySelectResult;
+        orderVIewController.topCount = numString;
+        orderVIewController.price = priceString;
+
+    [self.navigationController pushViewController:orderVIewController animated:YES];
+    }
+}
+#pragma mark 计算所有选中的数量
+- (void)calculateTotalNumber
+{
+    NSInteger selectCount = 0;
+    CGFloat TotalPrice = 0.0;
+    
+    [self.arraySelectResult removeAllObjects];
+    for (int i = 0; i < self.arrayFoodList.count; i++)
+    {
+        
+            HNCFFoodListModel *dataModel = [self.arrayFoodList objectAtIndex:i];
+            if ([dataModel.foodSelectCount integerValue]>0)
+            {
+                selectCount = selectCount+[dataModel.foodSelectCount integerValue];
+                TotalPrice =TotalPrice + [dataModel.foodSelectCount integerValue]*[dataModel.foodPrice floatValue];
+                [self.arraySelectResult addObject:dataModel];
+            }
+        
+        
+    }
+    [self.payView resetNumAndPrice:@{@"count":[NSString stringWithFormat:@"%ld",(long)selectCount],@"totalPrice":[NSString stringWithFormat:@"共￥%.2f",TotalPrice]}];
+    [self.mainTableView reloadData];
+  
+    
+    
+}
+//删除商品
+- (void)deleteShop:(NSString *)shopId
+{
+    [MJProgressHUD showHUDWithText1:@"加载中"];
+    [HNCFRequestManager fetchCarDelete:@{@"id":shopId}success:^(id result) {
+        NSInteger status = [[result objectForKey:@"code"]integerValue];
+        [MJProgressHUD hide1];
+        if (status ==0) {
+            [MJProgressHUD showHUDWithText:@"删除成功" duration:1.0];
+            [self requestShop];
+        }else{
+            [MJProgressHUD showHUDWithText:@"删除失败" duration:1.0];
+            [self requestShop];
+        }
+    } failure:^(NSError *error) {
+        
+    }];
+}
+@end

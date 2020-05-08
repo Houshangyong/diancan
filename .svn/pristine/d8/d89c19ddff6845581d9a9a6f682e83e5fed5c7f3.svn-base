@@ -1,0 +1,42 @@
+//
+//  HNCFShopCell.m
+//  HNCF
+//
+//  Created by houshangyong on 15/11/22.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFShopCell.h"
+
+@implementation HNCFShopCell
+
+- (void)awakeFromNib {
+    // Initialization code
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+- (void)setCellContent:(HNCFFoodListModel *)dataModel indexPath:(NSIndexPath *)indePath;
+{
+    if ([dataModel.foodSelectCount integerValue]>0) {
+        self.jianButton.hidden = NO;
+        self.addButton.hidden = NO;
+        self.num.hidden = NO;
+    }
+    else
+    {
+        self.jianButton.hidden = YES;
+        self.addButton.hidden = NO;
+        self.num.hidden = NO;
+    }
+    self.num.text = dataModel.foodSelectCount;
+    self.nameLabel.text = dataModel.foodName;
+    self.priceLabel.text = [NSString stringWithFormat:@"￥%.2f",[dataModel.foodPrice floatValue]];
+
+//    self.btnSelectStandard.hidden = YES;
+
+}
+@end

@@ -1,0 +1,24 @@
+{
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+    "cddb294e-0bbb-4645-b809-d1b202935a60++6172" : {
+
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "cddb294e-0bbb-4645-b809-d1b202935a60++6172" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "BEB73A7D-64DB-4504-ABBB-7DD7AAC6EB77",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "cddb294e-0bbb-4645-b809-d1b202935a60++6172" : "HNCF\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "HNCF",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "HNCF.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "http:\/\/code.taobao.org\/svn\/hncf",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "cddb294e-0bbb-4645-b809-d1b202935a60++6172"
+    }
+  ]
+}

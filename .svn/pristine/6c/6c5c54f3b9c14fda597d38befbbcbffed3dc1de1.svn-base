@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HNCFMZViewController">
+            <connections>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="   用户协议" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="01q-CE-c77">
+                    <rect key="frame" x="0.0" y="8" width="320" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="dCp-GD-Rqv"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HSL-hj-FPw">
+                    <rect key="frame" x="8" y="35" width="304" height="1"/>
+                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="r3w-ut-boe"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="28y-rK-kPO">
+                    <rect key="frame" x="8" y="37" width="304" height="325"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="325" id="czn-Yv-aB2"/>
+                    </constraints>
+                    <string key="text">1　用户应当同意本协议的条款并按照页面上的提示完成全部的注册程序。用户在进行注册程序过程中点击"同意"按钮即表示用户达成协议，完全接受本协议项下的全部条款。
+2　用户注册成功后，妈妈喊你吃饭将给予每个用户一个用户帐号及相应的密码，该用户帐号和密码由用户负责保管；用户应当对以其用户帐号进行的所有活动和事件负法律责任。
+3　用户一经注册妈妈喊你吃饭帐号，除非子频道要求单独开通权限，用户有权利用该账号使用妈妈喊你吃饭各个频道的单项服务，当用户使用妈妈喊你吃饭各单项服务时，用户的使用行为视为其对该单项服务的服务条款以及妈妈喊你吃饭在该单项服务中发出的各类公告的同意。
+4　妈妈喊你吃饭会员服务协议以及各个频道单项服务条款和公告可由妈妈喊你吃饭随时更新，且无需另行通知。您在使用相关服务时,应关注并遵守其所适用的相关条款。
+您在使用妈妈喊你吃饭提供的各项服务之前，应仔细阅读本服务协议。如您不同意本服务协议及/或随时对其的修改，您可以主动取消妈妈喊你吃饭提供的服务；您一旦使用妈妈喊你吃饭服务，即视为您已了解并完全同意本服务协议各项内容，包括妈妈喊你吃饭对服务协议随时所做的任何修改，并成为妈妈喊你吃饭用户。</string>
+                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HIy-ql-1il">
+                    <rect key="frame" x="8" y="425" width="304" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="25" id="Mzw-4G-kuh"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_drop_display" translatesAutoresizingMaskIntoConstraints="NO" id="qVA-Bx-u3X">
+                    <rect key="frame" x="286" y="12" width="20" height="12"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="20" id="1dK-3S-hPx"/>
+                        <constraint firstAttribute="height" constant="12" id="RXt-cc-a8J"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="HSL-hj-FPw" secondAttribute="trailing" constant="8" id="4RQ-Ic-Qct"/>
+                <constraint firstAttribute="trailing" secondItem="qVA-Bx-u3X" secondAttribute="trailing" constant="14" id="65y-y1-Za2"/>
+                <constraint firstItem="HSL-hj-FPw" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="6J7-Dc-Npj"/>
+                <constraint firstItem="HIy-ql-1il" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="7h3-rC-sTq"/>
+                <constraint firstItem="28y-rK-kPO" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="37" id="8lR-dS-XHX"/>
+                <constraint firstItem="01q-CE-c77" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="Cjn-C9-NFW"/>
+                <constraint firstItem="qVA-Bx-u3X" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="12" id="G0Z-eq-cSw"/>
+                <constraint firstItem="28y-rK-kPO" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="Ih4-2H-IYq"/>
+                <constraint firstAttribute="trailing" secondItem="HIy-ql-1il" secondAttribute="trailing" constant="8" id="UFh-U3-7UB"/>
+                <constraint firstItem="01q-CE-c77" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="8" id="VJf-MA-gnB"/>
+                <constraint firstAttribute="bottom" secondItem="HIy-ql-1il" secondAttribute="bottom" constant="30" id="gAO-CC-ffm"/>
+                <constraint firstAttribute="trailing" secondItem="28y-rK-kPO" secondAttribute="trailing" constant="8" id="ggc-9m-box"/>
+                <constraint firstAttribute="trailing" secondItem="01q-CE-c77" secondAttribute="trailing" id="zaW-h6-d8c"/>
+                <constraint firstItem="HSL-hj-FPw" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="35" id="zbM-JL-oYC"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="353" y="438"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="ic_drop_display" width="72" height="72"/>
+    </resources>
+</document>

@@ -1,0 +1,83 @@
+//
+//  HNCFCommmon.h
+//  HNCF
+//
+//  Created by Apple on 15/11/18.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#ifndef HNCFCommmon_h
+#define HNCFCommmon_h
+#import <SystemConfiguration/CaptiveNetwork.h>
+
+#import "UIDevice+mtgj.h"
+#import "UIView+FrameEx.h"
+#import "MTPlaceholderTextView.h"
+#import "MJProgressHUD.h"
+#import "BlocksKit+UIKit.h"
+#import "BlocksKit+MessageUI.h"
+#import "MJAlertView.h"
+#import "HNCFUserDefaultsUtil.h"
+#import "AFNetworking.h"
+#import "iCarousel.h"
+#import "UIImageView+WebCache.h"
+#import "HNCFHeadBrandView.h"
+#import "HNCFHomeCell.h"
+#import "HNCFHomeDetailViewController.h"
+#import <MapKit/MapKit.h>
+#import "HNCFLocation.h"
+#import "HNCFNaView.h"
+#import "HNCFSearchViewController.h"
+#import "HNCFMineViewController.h"
+#import "HNCFShopViewController.h"
+#import "HNCFOrderViewController.h"
+#import "HNCFHomeViewController.h"
+#import "MTLinkUrl.h"
+#import "HNCFRequestManager+app.h"
+#import "HNCFRequestManager+home.h"
+#import "HNCFRequestManager+user.h"
+#import "HNCFRequestManager.h"
+#import "MJMyTableViewCell.h"
+#import "HNCFLoginViewController.h"
+#import "HNCFResigetViewController.h"
+#import "FileOperation.h"
+#import "HNCFForgetPswViewController.h"
+#import "PullTableView.h"
+#import "HNCFMyCollectViewController.h"
+#import "HNCFCollectCell.h"
+#import "HNCFMyAddressViewController.h"
+#import "HNCFMyAddressCell.h"
+#import "HNCFAddViewController.h"
+#import "HNCFOrderHeadVIew.h"
+#import "HNCFMyOrderCell.h"
+#import "HNCFShopCell.h"
+#import "HNCFStarRateView.h"
+#import "HNCFPayView.h"
+#import "HNCFMyPinLunViewController.h"
+#import "HNCFFeedViewController.h"
+#import "HNCFFoodListModel.h"
+#import "HNCFButton.h"
+#import <AlipaySDK/AlipaySDK.h>
+#import "Order.h"
+#import "APAuthV2Info.h"
+#import "DataSigner.h"
+#import "HNCFSetViewController.h"
+#import "HNCFSetCell.h"
+#import "HNCFMyOrderViewController.h"
+#import "HNCFModifyPswViewController.h"
+#import "HNCFPinLunViewController.h"
+
+#define HNCF_APP_URL @"http://123.57.0.55:80/mmhw"
+#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16)) / 255.0 green:((float)((rgbValue & 0xFF00) >> 8)) / 255.0 blue:((float)(rgbValue & 0xFF)) / 255.0 alpha:1.0]
+
+#define HNCFWidth [UIScreen mainScreen].bounds.size.width
+#define HNCFHeight [UIScreen mainScreen].bounds.size.height
+#define DEFAULT_COLOR [UIColor colorWithRed:225/255. green:67/255. blue:69/255. alpha:1]
+// 获取本地应用完整版本号
+#define MT_APP_VERSION ([[NSDictionary dictionaryWithContentsOfFile:[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"Info.plist"]] objectForKey:@"CFBundleShortVersionString"])
+
+// 判断系统版本是否低于 v
+#define MT_SYSTEM_VERSION_LESS_THAN(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+
+#define HNCF_APP_DELEGATE ((AppDelegate *)[UIApplication sharedApplication].delegate)
+#endif /* HNCFCommmon_h */

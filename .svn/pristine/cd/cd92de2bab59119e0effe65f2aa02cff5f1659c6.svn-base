@@ -1,0 +1,87 @@
+//
+//  HNCFPayView.m
+//  HNCF
+//
+//  Created by houshangyong on 15/11/23.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFPayView.h"
+#import "HNCFCommmon.h"
+
+@interface HNCFPayView ()
+@property (nonatomic , strong)  UILabel*numLabel;
+@property (nonatomic , strong)  UILabel*priceLabel;
+@property (nonatomic , strong)  UIButton*payButton;
+
+@end
+@implementation HNCFPayView
+- (UILabel*)numLabel
+{
+    if (!_numLabel) {
+        _numLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 5, 30, 30)];
+        _numLabel.textColor = [UIColor whiteColor];
+        _numLabel.font = [UIFont systemFontOfSize:14];
+
+    }
+    return _numLabel;
+}
+
+- (UIButton *)payButton
+{
+    if (!_payButton) {
+        _payButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _payButton.frame = self.bounds;
+        [_payButton setTitle:@"结算" forState:UIControlStateNormal];
+        [_payButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        _payButton.tag = 2;
+//        _payButton.font = [UIFont systemFontOfSize:14];
+        [_payButton bk_addEventHandler:^(id sender) {
+            [self didselectButton];
+            
+        } forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _payButton;
+}
+- (UILabel*)priceLabel
+{
+    if (!_priceLabel) {
+        _priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(self.payButton.width-125, 5, 120, 30)];
+        _priceLabel.textColor = [UIColor whiteColor];
+        _priceLabel.textAlignment = NSTextAlignmentRight;
+        _priceLabel.font = [UIFont systemFontOfSize:14];
+    }
+    return _priceLabel;
+}
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self=[super initWithFrame:frame]) {
+        [self addSubview:self.payButton];
+        [self.payButton addSubview:self.numLabel];
+        [self.payButton addSubview:self.priceLabel];
+
+        
+        
+    }
+    return self;
+}
+- (void)didselectButton
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(withUserIndex:num:price:)]) {
+        [self.delegate withUserIndex:self num:self.numLabel.text price:self.priceLabel.text];
+    }
+
+}
+- (void)resetNumAndPrice:(id)model;
+{
+    if([model objectForKey:@"count"]<=0)
+    {
+        self.numLabel.hidden = YES;
+    }
+    else
+        self.numLabel.hidden = NO;
+    
+    self.numLabel.text =[model objectForKey:@"count"];
+    self.priceLabel.text = [model objectForKey:@"totalPrice"];
+
+}
+@end

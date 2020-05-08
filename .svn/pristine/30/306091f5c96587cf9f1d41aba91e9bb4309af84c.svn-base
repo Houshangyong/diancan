@@ -1,0 +1,48 @@
+//
+//  HNCFRequestManager+app.m
+//  HNCF
+//
+//  Created by houshangyong on 15/11/21.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFRequestManager+app.h"
+#import "HNCFCommmon.h"
+
+#define COMMENT_ADD                                      @"comment/add.do"
+#define COMMENT_SHOP_LIST                                @"comment/shopcommentL.do"
+#define COMMENT_USER_LIST                                @"comment/list.do"
+#define SHOP_LIST                                        @"order/orderslist.do"
+#define SHOP_ADD                                         @"order/addToCart.do"
+
+@implementation HNCFRequestManager (app)
++ (NSURLRequest *)fetchShopAdd:(NSDictionary *)parameters
+                       success:(void (^)(id result))success
+                       failure:(void (^)(NSError *error))failure;{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:SHOP_ADD]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+
+}
++ (NSURLRequest *)fetchOrdersList:(NSDictionary *)parameters
+                          success:(void (^)(id result))success
+                          failure:(void (^)(NSError *error))failure;
+{
+    NSURLRequest *request = [HNCFRequestManager post:[HNCF_APP_URL stringByAppendingPathComponent:SHOP_LIST]
+                                          parameters:parameters
+                                             success:^(id data) {
+                                                 success(data);
+                                             }
+                                             failure:^(NSError *error) {
+                                                 failure(error);
+                                             }];
+    return request;
+
+}
+@end

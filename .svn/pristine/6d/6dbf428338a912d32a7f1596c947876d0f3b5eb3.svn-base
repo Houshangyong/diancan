@@ -1,0 +1,21 @@
+//
+//  AppDelegate.h
+//  HNCF
+//
+//  Created by Apple on 15/11/17.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "HNCFCommmon.h"
+#import "WXApi.h"
+
+@interface AppDelegate : UIResponder <UIApplicationDelegate,WXApiDelegate>
+{
+    enum WXScene _scene;
+}
+@property (strong, nonatomic) UIWindow *window;
+
+@property (strong, nonatomic) MTTabBarController *tabBarController;
+@end
+

@@ -1,0 +1,30 @@
+//
+//  HNCFRequestManager+app.h
+//  HNCF
+//
+//  Created by houshangyong on 15/11/21.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFRequestManager.h"
+//http://localhost:8080/mmhw/comment/shopcommentL.do?sd_shopid=58&page=1
+@interface HNCFRequestManager (app)
++ (NSURLRequest *)fetchShopAdd:(NSDictionary *)parameters
+                     success:(void (^)(id result))success
+                     failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchOrdersList:(NSDictionary *)parameters
+                       success:(void (^)(id result))success
+                       failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchConformOrder:(NSDictionary *)parameters
+                          success:(void (^)(id result))success
+                          failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchPayOrder:(NSDictionary *)parameters
+                            success:(void (^)(id result))success
+                            failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchShopcommentL:(NSDictionary *)parameters
+                        success:(void (^)(id result))success
+                        failure:(void (^)(NSError *error))failure;
++ (NSURLRequest *)fetchCarList:(NSDictionary *)parameters
+                            success:(void (^)(id result))success
+                            failure:(void (^)(NSError *error))failure;
+@end

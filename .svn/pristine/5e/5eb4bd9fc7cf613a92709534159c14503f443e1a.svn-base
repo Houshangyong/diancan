@@ -1,0 +1,160 @@
+//
+//  HNCFPinLunViewController.m
+//  HNCF
+//
+//  Created by houshangyong on 15/11/23.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFPinLunViewController.h"
+#import "HNCFCommmon.h"
+
+@interface HNCFPinLunViewController ()<HNCFStarRateViewDelegate,HNCFNaViewDelegate>
+@property (strong, nonatomic) HNCFStarRateView *starRateView;
+@property (strong, nonatomic) UILabel *starlabel;
+
+@property (nonatomic , strong) HNCFNaView *naView;
+@property (nonatomic ,strong) MTPlaceholderTextView *pViewText;
+@property (nonatomic ,strong) NSString  *star1;
+@property (nonatomic ,strong) NSString  *star2;
+@property (nonatomic ,strong) MTPlaceholderTextView *pViewText1;
+
+@end
+
+@implementation HNCFPinLunViewController
+- (HNCFStarRateView *)starRateView
+{
+    if (!_starRateView) {
+        _starRateView = [[HNCFStarRateView alloc] initWithFrame:CGRectMake(self.starlabel.maxY+5, self.headView.maxY+10, 100, 40) numberOfStars:5];
+        _starRateView.scorePercent = 0;
+        _starRateView.allowIncompleteStar = NO;
+        _starRateView.hasAnimation = YES;
+        _starRateView.delegate = self;
+    }
+    return _starRateView;
+}
+- (UILabel *)starlabel
+{
+    if (!_starlabel) {
+        _starlabel = [[UILabel alloc] initWithFrame:CGRectMake((HNCFWidth-185)/2, self.headView.maxY+10, 80, 40)];
+        _starlabel.text = @"综合评价:";
+          }
+    return _starlabel;
+}
+
+- (MTPlaceholderTextView *)pViewText
+{
+    if (!_pViewText) {
+        _pViewText = [[MTPlaceholderTextView alloc] initWithFrame:CGRectMake(50, self.pViewText1.maxY+10, HNCFWidth-100, 100)];
+        _pViewText.placeholder =@"输入评论";
+        _pViewText.layer.borderWidth = 1.0f;
+        _pViewText.layer.borderColor = [[UIColor lightGrayColor]CGColor];
+        _pViewText.layer.cornerRadius = 5.0f;
+    }
+    return _pViewText;
+}
+- (MTPlaceholderTextView *)pViewText1
+{
+    if (!_pViewText1) {
+        _pViewText1 = [[MTPlaceholderTextView alloc] initWithFrame:CGRectMake(50, self.starRateView.maxY+20, HNCFWidth-100, 30)];
+        _pViewText1.placeholder =@"输入评论标题";
+        _pViewText1.layer.borderWidth = 1.0f;
+        _pViewText1.layer.borderColor = [[UIColor lightGrayColor]CGColor];
+        _pViewText1.layer.cornerRadius = 5.0f;
+    }
+    return _pViewText1;
+}
+
+- (HNCFNaView *)naView
+{
+    if (!_naView) {
+        _naView = [[HNCFNaView alloc]initWithFrame:CGRectMake(0, 20, HNCFWidth, 44)];
+        _naView.delegate = self;
+    }
+    return _naView;
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [HNCF_APP_DELEGATE.tabBarController setTabBarHidden:YES];
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    [self.naView setHomeBannerData:@"发表评价" locationImage:YES rightButton:YES leftButton:NO rightImage:[UIImage imageNamed:@""]];
+    self.navigationItem.leftBarButtonItem =[[UIBarButtonItem alloc]initWithCustomView:self.naView];
+    self.headView.layer.borderColor = [[UIColor lightGrayColor]CGColor];
+    self.headView.layer.borderWidth = 0.5;
+    [self.view addSubview:self.starlabel];
+
+    [self.view addSubview:self.starRateView];
+    [self.view addSubview:self.self.pViewText1];
+
+    [self.view addSubview:self.self.pViewText];
+    self.view.backgroundColor = [UIColor whiteColor];
+    NSLog(@"model:%@",self.model);
+    self.headNameLabel.text = [self.model objectForKey:@"title"];
+    self.headPriceLabel.text = [NSString stringWithFormat:@"￥%.2f",[[self.model objectForKey:@"money"] floatValue]];
+    [self.headImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",HNCF_IMAGE_URL,[self.model objectForKey:@"thumb"]]] placeholderImage:nil];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+#pragma mark - HNCFStarRateViewDelegate
+- (void)starRateView:(HNCFStarRateView *)starRateView scroePercentDidChange:(CGFloat)newScorePercent;
+{
+    int pingxing = newScorePercent*10/2;
+    NSLog(@"11 %d",pingxing);
+    self.star1 = [NSString stringWithFormat:@"%d",pingxing];}
+
+- (void)didSelectLeft;
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void)didSelectRight;
+{
+    
+}
+- (IBAction)pinButton:(id)sender;
+{
+    if ([FileOperation isEmptyOrNull:self.star1]) {
+        [MJProgressHUD showHUDWithText:@"请先评分" duration:1.0];
+ 
+    }else{
+        if ([self.pViewText1.text length]==0) {
+            [MJProgressHUD showHUDWithText:@"请输入评论标题" duration:1.0];
+
+        }else{
+            if ([self.pViewText1.text length]==0) {
+                [MJProgressHUD showHUDWithText:@"请输入评论内容" duration:1.0];
+                
+            }else{
+                NSDictionary *userInfo = [HNCFUserDefaultsUtil globalObjectForKey:kMTCurrentUserInfo];
+                [HNCFRequestManager fetchCommentAdd:@{
+                                                      @"sd_userid":[userInfo objectForKey:@"uid"],
+                                                      @"code":[self.model objectForKey:@"code"],
+                                                      @"sd_title":self.pViewText1.text,
+                                                      @"sd_content":self.pViewText.text,
+                                                      @"star":self.star1,
+                                                      } success:^(id result) {
+                                                          NSInteger status = [[result objectForKey:@"code"]integerValue];
+                                                          if (status ==0) {
+                                                              [MJProgressHUD showHUDWithText:[result objectForKey:@"msg"] duration:1.0];
+                                                              [self.navigationController popViewControllerAnimated:YES];
+                                                          }
+                                                          else{
+                                                              [MJProgressHUD showHUDWithText:[result objectForKey:@"msg"] duration:1.0];
+                                                              
+                                                          }
+                                                      } failure:^(NSError *error) {
+                                                          
+                                                      }];
+
+            }
+ 
+        }
+    }
+  }
+@end

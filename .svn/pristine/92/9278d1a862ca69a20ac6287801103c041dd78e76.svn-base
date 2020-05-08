@@ -1,0 +1,72 @@
+//
+//  HNCFHomeDetailViewController.m
+//  HNCF
+//
+//  Created by Apple on 15/11/18.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFHomeDetailViewController.h"
+#import "HNCFCommmon.h"
+
+@interface HNCFHomeDetailViewController ()<HNCFNaViewDelegate,HNCFHeadBrandViewDelegate>
+@property (nonatomic , strong) HNCFNaView *naView;
+@property (nonatomic , strong) HNCFHeadBrandView *headBrandView;
+@property (nonatomic , strong) UIButton *backButton;
+
+@end
+
+@implementation HNCFHomeDetailViewController
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.tabBarController.tabBar.hidden = YES;
+//    self.navigationController.navigationBar.hidden = YES;
+
+}
+- (HNCFNaView *)naView
+{
+    if (!_naView) {
+        _naView = [[HNCFNaView alloc]initWithFrame:CGRectMake(0, 20, HNCFWidth, 44)];
+        _naView.delegate = self;
+    }
+    return _naView;
+}
+- (HNCFHeadBrandView *)headBrandView
+{
+    if (!_headBrandView) {
+        _headBrandView = [[HNCFHeadBrandView alloc]initWithFrame:CGRectMake(0, 0, HNCFWidth, HNCFWidth-100)];
+        _headBrandView.delegate = self;
+        _headBrandView.backgroundColor = [UIColor clearColor];
+    }
+    return _headBrandView;
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    [self.naView setHomeBannerData:@"欧式回锅肉" locationImage:YES rightButton:YES];
+    self.navigationItem.leftBarButtonItem =[[UIBarButtonItem alloc]initWithCustomView:self.naView];
+    [self.headBrandView setHomeBannerData:@[@{@"adpic":@""}]];
+    [self.view addSubview:self.headBrandView];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)didSelectLeft
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void)didSelectRight
+{
+    
+}
+#pragma
+#pragma mark - HNCFHeadBrandViewDelegate
+- (void)HNCFHeadBrandView:(HNCFHeadBrandView *)bannerView didSelectItem:(NSDictionary *)itemData Index:(NSInteger)index;
+{
+    
+}
+@end

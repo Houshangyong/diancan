@@ -1,0 +1,18 @@
+//
+//  HNCFHeadBrandView.h
+//  HNCF
+//
+//  Created by Apple on 15/11/18.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+@class HNCFHeadBrandView;
+@protocol HNCFHeadBrandViewDelegate <NSObject>
+
+- (void)HNCFHeadBrandView:(HNCFHeadBrandView *)bannerView didSelectItem:(NSDictionary *)itemData Index:(NSInteger)index;
+@end
+@interface HNCFHeadBrandView : UIView
+@property (nonatomic, weak) id<HNCFHeadBrandViewDelegate> delegate;
+- (void)setHomeBannerData:(id)bannerData;
+@end

@@ -1,0 +1,40 @@
+//
+//  HNCFHomeCell.m
+//  HNCF
+//
+//  Created by Apple on 15/11/18.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFHomeCell.h"
+#import "HNCFCommmon.h"
+@implementation HNCFHomeCell
+
+- (void)awakeFromNib {
+    // Initialization code
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+- (void)Hncf:(id)model;
+{
+    [self.topImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",HNCF_IMAGE_URL,[model objectForKey:@"sl_thumb"]]] placeholderImage:nil];
+    self.headImageView.layer.cornerRadius = 30.0f;
+    self.headImageView.layer.borderColor = [[UIColor lightGrayColor]CGColor];
+    self.headImageView.layer.borderWidth = 0.5f;
+    
+    [self.headImageView.layer setMasksToBounds:YES];
+    [self.headImageView sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@%@",HNCF_IMAGE_URL,[model objectForKey:@"thumb"]]] placeholderImage:nil];
+    self.nameLabel.text = [NSString stringWithFormat:@"%@",[model objectForKey:@"sl_title"]];
+    
+    
+    self.contentLabel.text =[NSString stringWithFormat:@"%@",[model objectForKey:@"sl_description"]]; ;
+    self.subLabel.text = [NSString stringWithFormat:@"厨师:%@",[model objectForKey:@"title"]];
+    self.priceLabel.text = [NSString stringWithFormat:@"￥%@.00", [model objectForKey:@"sl_money"]];
+    self.topLabel.text = [NSString stringWithFormat:@"还剩%@份",[model objectForKey:@"def_renshu"]];
+    self.numLabel.text = [NSString stringWithFormat:@"%@",[model objectForKey:@"def_renshu"]];
+}
+@end

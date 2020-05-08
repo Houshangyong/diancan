@@ -13,7 +13,7 @@
 #define MT_TAB_BAR_BUTTON_TAG_BASE 100
 
 @interface MTTabBarView ()
-
+@property (nonatomic ,strong) UILabel *barge;
 @end
 
 @implementation MTTabBarView
@@ -25,39 +25,57 @@
         xian.backgroundColor = [UIColor lightGrayColor];
         [self addSubview:xian];
 //        @[ @"All", @"T2", @"bianlidian", @"T3"
-        
+        self.barge = [[UILabel alloc]initWithFrame:CGRectMake(([UIScreen mainScreen].bounds.size.width-256-40)/3*2+64*2+60, 5, 20,20)];
+        self.barge.backgroundColor = [UIColor redColor];
+        self.barge.layer.cornerRadius = 10;
+        self.barge.layer.masksToBounds = YES;
+        self.barge.textColor = [UIColor whiteColor];
+        self.barge.font = [UIFont systemFontOfSize:12.0f];
+        self.barge.textAlignment = NSTextAlignmentCenter;
+        [self setbarge:0];
+        [self addSubview:self.barge];
      
         CGRect rect0 = CGRectMake(20, 10, 64, 44);
-        [self setButtonWithTitle:@"菜单"
-                     normalImage:[UIImage imageNamed:@"All"]
-                   selectedImage:[UIImage imageNamed:@"All1"]
+        [self setButtonWithTitle:@"闪 购"
+                     normalImage:[UIImage imageNamed:@"ic_home"]
+                   selectedImage:[UIImage imageNamed:@"ic_home_on"]
                            frame:rect0
                            index:0];
      
         CGRect rect1 = CGRectMake(([UIScreen mainScreen].bounds.size.width-256-40)/3+64+20, 10, 64, 44);
-        [self setButtonWithTitle:@"订单"
-                     normalImage:[UIImage imageNamed:@"T2"]
-                   selectedImage:[UIImage imageNamed:@"T2S"]
+        [self setButtonWithTitle:@"订 单"
+                     normalImage:[UIImage imageNamed:@"ic_order"]
+                   selectedImage:[UIImage imageNamed:@"ic_order_on"]
                            frame:rect1
                            index:1];
         CGRect rect2 = CGRectMake(([UIScreen mainScreen].bounds.size.width-256-40)/3*2+64*2+20, 10, 64, 44);
         [self setButtonWithTitle:@"购物车"
-                     normalImage:[UIImage imageNamed:@"bianlidian"]
-                   selectedImage:[UIImage imageNamed:@"bianlidian1"]
+                     normalImage:[UIImage imageNamed:@"ic_cart"]
+                   selectedImage:[UIImage imageNamed:@"ic_cart_on"]
                            frame:rect2
                            index:2];
         CGRect rect3 = CGRectMake(([UIScreen mainScreen].bounds.size.width-256-40)/3*3+64*3+20, 10, 64, 44);
 
-        [self setButtonWithTitle:@"我的"
-                     normalImage:[UIImage imageNamed:@"T3"]
-                   selectedImage:[UIImage imageNamed:@"T3S"]
+        [self setButtonWithTitle:@"我 的"
+                     normalImage:[UIImage imageNamed:@"ic_mine"]
+                   selectedImage:[UIImage imageNamed:@"ic_mine_on"]
                            frame:rect3
                            index:3];
 
     }
     return self;
 }
+- (void)setbarge:(NSInteger)index;
 
+{
+    if (index ==0) {
+        self.barge.hidden = YES;
+    }else{
+        self.barge.hidden = NO;
+
+        self.barge.text = [NSString stringWithFormat:@"%ld",index];
+    }
+}
 - (void)setButtonWithTitle:(NSString *)title normalImage:(UIImage *)normalImage selectedImage:(UIImage *)selectedImage frame:(CGRect)frame index:(NSUInteger)index {
     
     UIButton *item = [UIButton buttonWithType:UIButtonTypeCustom];

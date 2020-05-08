@@ -1,0 +1,260 @@
+//
+//  HNCFHomeViewController.m
+//  HNCF
+//
+//  Created by Apple on 15/11/17.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFHomeViewController.h"
+#import "HNCFCommmon.h"
+
+@interface HNCFHomeViewController ()<HNCFHeadBrandViewDelegate,UITableViewDataSource,UITableViewDelegate,HNCFNaViewDelegate,MJMyLaundrycouponsViewDelegate>
+@property (nonatomic , strong) HNCFHeadBrandView *headBrandView;
+@property (nonatomic , strong) UITableView *mainTableView;
+@property (nonatomic , strong) HNCFNaView *naView;
+@property (nonatomic , strong) NSMutableArray *shopList;
+@property (nonatomic) NSInteger padeIndex;
+@property (nonatomic) NSInteger bagIndex;
+@property (nonatomic) NSString * cityString;
+@property (nonatomic , strong) MJMyLaundrycouponsView *laundrycouponsView;
+@property (nonatomic , strong) UIView *headView;
+
+@end
+
+@implementation HNCFHomeViewController
+- (UIView *)headView
+{
+    if (!_headView) {
+        _headView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, HNCFWidth, HNCFWidth/3+40)];
+    }
+    return _headView;
+}
+- (MJMyLaundrycouponsView *)laundrycouponsView
+{
+    if (!_laundrycouponsView) {
+        _laundrycouponsView = [[MJMyLaundrycouponsView alloc]initWithFrame:CGRectMake(0, self.headBrandView.maxY+10, [UIScreen mainScreen].bounds.size.width, 40)];
+        _laundrycouponsView.delegate = self;
+        
+        
+    }
+    return _laundrycouponsView;
+}
+- (NSMutableArray *)shopList
+{
+    if (!_shopList) {
+        _shopList = [NSMutableArray arrayWithCapacity:0];
+    }
+    return _shopList;
+}
+- (UITableView *)mainTableView
+{
+    if (!_mainTableView) {
+        _mainTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, HNCFWidth, HNCFHeight-49-20) style:UITableViewStylePlain];
+        _mainTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _mainTableView.delegate = self;
+        _mainTableView.tableHeaderView = self.headView;
+        _mainTableView.rowHeight = 330;
+        _mainTableView.dataSource = self;
+    }
+    return _mainTableView;
+}
+- (HNCFHeadBrandView *)headBrandView
+{
+    if (!_headBrandView) {
+        _headBrandView = [[HNCFHeadBrandView alloc]initWithFrame:CGRectMake(0, 0, HNCFWidth, HNCFWidth/3)];
+        _headBrandView.delegate = self;
+        _headBrandView.backgroundColor = [UIColor clearColor];
+    }
+    return _headBrandView;
+}
+- (HNCFNaView *)naView
+{
+    if (!_naView) {
+        _naView = [[HNCFNaView alloc]initWithFrame:CGRectMake(0, 20, HNCFWidth, 44)];
+        _naView.delegate = self;
+    }
+    return _naView;
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [HNCF_APP_DELEGATE.tabBarController setTabBarHidden:NO];
+    self.navigationController.navigationBar.hidden = NO;
+    self.padeIndex = 1;
+//    [self location];
+
+    [HNCFRequestManager fetchhomeAds:@{} success:^(id result) {
+        NSInteger status = [[result objectForKey:@"code"]integerValue];
+        if (status == 0) {
+            [self.headBrandView setHomeBannerData:[result objectForKey:@"result"]];
+        }
+    } failure:^(NSError *error) {
+        
+    }];
+    [HNCFRequestManager fetchhomeshop:@{@"page":[NSString stringWithFormat:@"%ld",(long)self.padeIndex]} success:^(id result) {
+        NSInteger status = [[result objectForKey:@"code"]integerValue];
+        NSLog(@"shopList:%@",result);
+        if (status == 0) {
+            self.shopList = [result objectForKey:@"result"];
+            [self.mainTableView reloadData];
+        }
+    } failure:^(NSError *error) {
+        
+    }];
+
+}
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    self.bagIndex = 0;
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    self.view.backgroundColor = [UIColor whiteColor];
+    [self.headView addSubview:self.headBrandView];
+    [self.headView addSubview:self.laundrycouponsView];
+
+    [self.view addSubview:self.mainTableView];
+    self.bagIndex = 0;
+
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+- (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section;   // custom view for header. will be adjusted to default or specified header height
+{
+    return self.headView;
+}
+#pragma
+#pragma mark - UITableViewDataSource
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
+{
+    return [self.shopList count];
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+    static NSString *CellIdentifier = @"HNCFHomeCell";
+    HNCFHomeCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"HNCFHomeCell" owner:self options:nil];
+        cell = [nib objectAtIndex:0];
+        
+    }
+    cell.shopButton.tag = indexPath.row;
+    [cell.shopButton addTarget:self action:@selector(shopButtonSelect:) forControlEvents:UIControlEventTouchUpInside];
+    id model = [self.shopList objectAtIndex:indexPath.row];
+    [cell Hncf:model];
+
+    return cell;
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    id model = [self.shopList objectAtIndex:indexPath.row];
+
+    HNCFHomeDetailViewController *homeDetailViewController = [[HNCFHomeDetailViewController alloc]init];
+    homeDetailViewController.model = model;
+    [self.navigationController pushViewController:homeDetailViewController animated:YES];
+    
+}
+#pragma
+#pragma mark - HNCFHeadBrandViewDelegate
+- (void)HNCFHeadBrandView:(HNCFHeadBrandView *)bannerView didSelectItem:(NSDictionary *)itemData Index:(NSInteger)index;
+{
+    
+}
+#pragma
+#pragma mark - location
+- (void)location
+{
+    //    self.locationManager = [[CLLocationManager alloc] init];
+    //    // 设置定位精度，十米，百米，最好
+    //    [self.locationManager setDesiredAccuracy:kCLLocationAccuracyNearestTenMeters];
+    //    self.locationManager.delegate = self;
+    //    // 开始时时定位
+    //    [self.locationManager startUpdatingLocation];
+    [MJProgressHUD showHUDWithText1:@"加载中"];
+    //只获取一次定位
+    __block  BOOL isOnece = YES;
+    [HNCFLocation getGps:^(double lat, double lng ,NSString *city) {
+        isOnece = NO;
+        self.cityString = city;
+        [self.naView setHomeBannerData:city locationImage:NO rightButton:NO leftButton:YES];
+        self.navigationItem.titleView = self.naView;
+        [MJProgressHUD hide1];
+        //        [self.locationTableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
+        if (!isOnece) {
+            [HNCFLocation stop];
+            [MJProgressHUD hide1];
+
+        }
+    }];
+}
+#pragma
+#pragma mark - leftMenu
+- (void)didSelectLeft;
+{
+    
+}
+#pragma
+#pragma mark - rightSearch
+- (void)didSelectRight;
+{
+    HNCFSearchViewController *searchViewController = [[HNCFSearchViewController alloc]init];
+    [self.navigationController pushViewController:searchViewController animated:YES];
+}
+- (void)shopButtonSelect:(UIButton *)sender
+{
+//    self.bagIndex ++;
+//    [self setBadgeValue:[NSString stringWithFormat:@"%ld",(long)self.bagIndex] atTabIndex:2];
+
+    id model = [self.shopList objectAtIndex:[sender tag]];
+    NSDictionary *userInfo = [HNCFUserDefaultsUtil globalObjectForKey:kMTCurrentUserInfo];
+    [HNCFRequestManager fetchShopAdd:@{@"pay_type":@"5",@"goodsid":[model objectForKey:@"sl_id"],@"shopid":[model objectForKey:@"id"],@"shopname":[model objectForKey:@"sl_title"],@"gonumber":@"1",@"moneycount":[model objectForKey:@"sl_money"],@"add_street":self.cityString,@"add_username":[userInfo objectForKey:@"username"],@"add_phone":[userInfo objectForKey:@"mobile"]} success:^(id result) {
+        NSInteger code = [[result objectForKey:@"code"]integerValue];
+        if (code ==0) {
+            [MJProgressHUD showHUDWithText:[result objectForKey:@"msg"] duration:1.0];
+            NSLog(@"%@",result);
+            self.bagIndex ++;
+//            [self setBadgeValue:[NSString stringWithFormat:@"%ld",(long)self.bagIndex] atTabIndex:2];
+            [HNCF_APP_DELEGATE.tabBarController setbarge1:self.bagIndex];
+
+        }
+        
+    } failure:^(NSError *error) {
+        
+    }];
+   
+}
+-(void)setBadgeValue:(NSString*)val atTabIndex:(int)index
+
+{
+    
+    // UITabBarItem* tab = [ objectAtIndex:2*index];
+    
+    UITabBarItem* tab = [[self.tabBarController.tabBar items] objectAtIndex:index];
+    
+    if ([val integerValue] <= 0) {
+        
+        tab.badgeValue = nil;
+        
+    }
+    
+    else
+        
+    {
+        
+        tab.badgeValue = val;
+        
+    }
+    
+}
+- (void)withUserIndex:(MJMyLaundrycouponsView *)headView index:(NSInteger)index;
+{
+    
+}
+@end

@@ -1,0 +1,253 @@
+//
+//  HNCFAddViewController.m
+//  HNCF
+//
+//  Created by houshangyong on 15/11/22.
+//  Copyright © 2015年 hsy. All rights reserved.
+//
+
+#import "HNCFAddViewController.h"
+#import "HNCFCommmon.h"
+
+@interface HNCFAddViewController ()<HNCFNaViewDelegate>
+@property (nonatomic , strong) HNCFNaView *naView;
+@property (nonatomic , strong) NSMutableArray *array;
+
+@end
+
+@implementation HNCFAddViewController
+- (NSMutableArray *)array
+{
+    if (!_array) {
+        _array = [NSMutableArray arrayWithCapacity:0];
+    }
+    return _array;
+}
+- (HNCFNaView *)naView
+{
+    if (!_naView) {
+        _naView = [[HNCFNaView alloc]initWithFrame:CGRectMake(0, 20, HNCFWidth, 44)];
+        _naView.delegate = self;
+    }
+    return _naView;
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    if ([self.who isEqualToString:@"0"]) {
+  
+        [self.addButton setTitle:@"修改地址" forState:UIControlStateNormal];
+        [self.leftButton setTitle:[self.model objectForKey:@"shi"] forState:UIControlStateNormal];
+        [self.rightButton setTitle:[self.model objectForKey:@"xian"] forState:UIControlStateNormal];
+        self.addresstext.text = [NSString stringWithFormat:@" %@",[self.model objectForKey:@"jiedao"]];
+        self.nametext.text = [NSString stringWithFormat:@" %@",[self.model objectForKey:@"shouhuoren"]];
+        self.phonetext.text = [NSString stringWithFormat:@" %@",[self.model objectForKey:@"mobile"]];
+    }else{
+        [HNCFRequestManager fetchCityList:@{@"model":@"0"} success:^(id result) {
+            NSInteger code = [[result objectForKey:@"code"]integerValue];
+            NSLog(@"result:%@",result);
+
+            if (code ==0) {
+                NSMutableArray *arr11 = [@[] mutableCopy];
+                NSArray *sortedArray = [[NSArray alloc]init];
+                NSArray *dataList = [result objectForKey:@"result"];
+                for (int i = 0; i<[dataList count]; i++) {
+                    HNCFAddress *dataModel =[[HNCFAddress alloc] init];
+                    dataModel.name = [NSString stringWithFormat:@"%@",[[dataList objectAtIndex:i]objectForKey:@"name"]];
+                    dataModel.channel = [NSString stringWithFormat:@"%@",[[dataList objectAtIndex:i]objectForKey:@"channel"]];
+                    dataModel.model = [NSString stringWithFormat:@"%@",[[dataList objectAtIndex:i]objectForKey:@"model"]];
+
+                    dataModel.catdir = [NSString stringWithFormat:@"%@",[[dataList objectAtIndex:i]objectForKey:@"catdir"]];
+                    dataModel.order = [NSString stringWithFormat:@"%@",[[dataList objectAtIndex:i]objectForKey:@"order"]];
+                    dataModel.parentid = [NSString stringWithFormat:@"%@",[[dataList objectAtIndex:i]objectForKey:@"parentid"]];
+
+                    [arr11 addObject:dataModel];
+                    sortedArray = [arr11 sortedArrayUsingComparator:^NSComparisonResult(HNCFAddress *p1, HNCFAddress *p2){
+                        return [p1.parentid compare:p2.parentid];
+                    }];
+                }
+                NSMutableArray *array = [NSMutableArray arrayWithArray:sortedArray];
+                for (int i = 0; i<[array count]; i++) {
+                    
+                    HNCFAddress *model = array[i];
+                    NSMutableArray *tempArray = [@[] mutableCopy];
+                    
+                    for (int j = 0; j<[array count]; j++) {
+                        HNCFAddress *model1 = array[j];
+                        if([model.parentid isEqualToString:model1.parentid]){
+                            NSLog(@"jvalue = kvalue");
+                            [tempArray addObject:model1];
+                        }
+                    }
+                    if ([tempArray count] > 1) {
+                        
+                        [self.array addObject:tempArray];
+                    }
+                    for (int i = 0; i < [tempArray count] - 1; i++) {
+                        [array removeObject:[tempArray objectAtIndex:i]];
+                    }
+                }
+            }
+        } failure:^(NSError *error) {
+            
+        }];
+
+        [self.addButton setTitle:@"添加地址" forState:UIControlStateNormal];
+        [self.leftButton setTitle:@"请选择街区↓" forState:UIControlStateNormal];
+        [self.rightButton setTitle:@"请选择楼宇↓" forState:UIControlStateNormal];
+        self.addresstext.text = @"";
+        self.nametext.text = @"";
+        self.phonetext.text = @"";
+
+    }
+  
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+    self.view.backgroundColor = [UIColor whiteColor];
+
+    [self.naView setHomeBannerData:@"添加收货地址" locationImage:YES rightButton:YES leftButton:NO rightImage:[UIImage imageNamed:@""]];
+    self.navigationItem.leftBarButtonItem =[[UIBarButtonItem alloc]initWithCustomView:self.naView];
+    self.leftButton.layer.cornerRadius = 5.0f;
+    self.leftButton.layer.borderColor = [[UIColor lightGrayColor]CGColor];
+    self.leftButton.layer.borderWidth = 1.0f;
+    self.rightButton.layer.cornerRadius = 5.0f;
+    self.rightButton.layer.borderColor = [[UIColor lightGrayColor]CGColor];
+    self.rightButton.layer.borderWidth = 1.0f;
+    self.nametext.layer.cornerRadius = 5.0f;
+    self.nametext.layer.borderColor = [[UIColor lightGrayColor]CGColor];
+    self.nametext.layer.borderWidth = 1.0f;
+
+    self.addresstext.layer.cornerRadius = 5.0f;
+    self.addresstext.layer.borderColor = [[UIColor lightGrayColor]CGColor];
+    self.addresstext.layer.borderWidth = 1.0f;
+    self.phonetext.layer.cornerRadius = 5.0f;
+    self.phonetext.layer.borderColor = [[UIColor lightGrayColor]CGColor];
+    self.phonetext.layer.borderWidth = 1.0f;
+    self.addButton.layer.cornerRadius = 5.0f;
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)didSelectLeft;
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+- (void)didSelectRight;
+{
+    
+}
+- (IBAction)buttonSelect:(id)sender;
+{
+    switch ([sender tag]) {
+        case 0:
+        {
+            /*  
+             * 收货地址--省  市  街道  和大厦列表
+             * model为1的为省市街道大厦列表
+             * 0为省的父id  20为山西 21为太原
+             * 为  21 先是取到街道列表
+             * 根据街道  显示大厦
+             */
+            [HNCFRequestManager fetchCityList:@{@"model":@"21"} success:^(id result) {
+                
+            } failure:^(NSError *error) {
+                
+            }];
+        }
+            break;
+        case 1:
+        {
+            [HNCFRequestManager fetchCityList:@{@"model":@"21"} success:^(id result) {
+                
+            } failure:^(NSError *error) {
+                
+            }];
+
+        }
+            break;
+        case 2:
+        {
+            if ([self.who isEqualToString:@"0"]) {
+                //修改
+                [HNCFRequestManager fetchaddressUpdate:@{@"shi":[self.model objectForKey:@"shi"],@"xian":[self.model objectForKey:@"xian"],@"jiedao":[self.model objectForKey:@"jiedao"],@"shouhuoren":[self.model objectForKey:@"shouhuoren"],@"mobile":[self.model objectForKey:@"mobile"]} success:^(id result) {
+                    NSInteger status = [[result objectForKey:@"code"]integerValue];
+                    if (status ==0) {
+                        
+                        [MJProgressHUD showHUDWithText:[result objectForKey:@"msg"] duration:1.0];
+                        [self.navigationController popViewControllerAnimated:YES];
+                    }else
+                    {
+                        [MJProgressHUD showHUDWithText:[result objectForKey:@"msg"] duration:1.0];
+                        
+                    }
+                } failure:^(NSError *error) {
+                    
+                }];
+                
+            }else{
+                if ([self.leftButton.titleLabel.text length]==0) {
+                    [MJProgressHUD showHUDWithText:@"请选择街道" duration:1.0];
+                }else{
+                    if ([self.rightButton.titleLabel.text length]==0) {
+                        [MJProgressHUD showHUDWithText:@"请选择大厦" duration:1.0];
+
+                    }else{
+                        if ([self.addresstext.text length]==0) {
+                            [MJProgressHUD showHUDWithText:@"请填写详细地址" duration:1.0];
+
+                        }else{
+                            if ([self.nametext.text length]==0) {
+                                [MJProgressHUD showHUDWithText:@"请填写您的姓名" duration:1.0];
+
+                            }else{
+                                if ([self.phonetext.text length]==0) {
+                                    [MJProgressHUD showHUDWithText:@"请填写您的手机号" duration:1.0];
+
+                                }else{
+                                    if ([FileOperation isValidatePhone:self.phonetext.text]) {
+                                        
+                                   
+                                    [HNCFRequestManager fetchAddress:@{@"shi":self.leftButton.titleLabel.text,@"xian":self.rightButton.titleLabel.text,@"jiedao":self.addresstext.text,@"shouhuoren":self.nametext.text,@"mobile":self.phonetext.text} success:^(id result) {
+                                        NSInteger status = [[result objectForKey:@"code"]integerValue];
+                                        if (status ==0) {
+                                            
+                                            [MJProgressHUD showHUDWithText:[result objectForKey:@"msg"] duration:1.0];
+                                            [self.navigationController popViewControllerAnimated:YES];
+
+                                        }else
+                                        {
+                                            [MJProgressHUD showHUDWithText:[result objectForKey:@"msg"] duration:1.0];
+                                            
+                                        }
+
+                                        
+                                    } failure:^(NSError *error) {
+                                        
+                                    }];
+                                    }else{
+                                        [MJProgressHUD showHUDWithText:@"手机号不合法" duration:1.0];
+ 
+                                    }
+
+                                }
+
+                            }
+ 
+                        }
+                    }
+                }
+              
+            }
+
+                   }
+            break;
+        default:
+            break;
+    }
+}
+@end
